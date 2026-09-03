@@ -1,0 +1,19 @@
+{
+  "name": "@italy-tours/affiliate",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@italy-tours/cms": "workspace:*",
+    "payload": "^3.0.0"
+  },
+  "devDependencies": {
+    "@italy-tours/tsconfig": "workspace:*",
+    "typescript": "^5.5.4"
+  }
+}

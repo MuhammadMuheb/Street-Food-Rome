@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Default token values, overridden per-request by the inline `style` the root
+ * layout sets on <html> from the resolved Site's themeTokens. These defaults
+ * only apply when no site resolved (e.g. static export tooling, Storybook).
+ */
+:root {
+  --colorPrimary: #0f172a;
+  --colorAccent: #f97316;
+  --colorBackground: #ffffff;
+  --colorForeground: #0f172a;
+  --fontHeading: system-ui, sans-serif;
+  --fontBody: system-ui, sans-serif;
+  --radius: 0.5rem;
+  --heroStyle: default;
+}
+
+body {
+  background-color: var(--colorBackground);
+  color: var(--colorForeground);
+  font-family: var(--fontBody);
+}
