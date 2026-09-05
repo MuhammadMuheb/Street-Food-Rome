@@ -4,6 +4,8 @@ export * from './primitives/Section';
 export * from './primitives/Badge';
 
 export * from './blocks/Hero';
+export * from './blocks/OfferHero';
+export * from './blocks/LinkInBioList';
 export * from './blocks/TourCard';
 export * from './blocks/FAQ';
 export * from './blocks/CTA';

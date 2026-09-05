@@ -33,6 +33,13 @@ export interface ButtonLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement>
   variant?: Variant;
 }
 
+// Deliberately a plain <a>, not next/link: every current call site points
+// at /go/:slug (the affiliate cloak + click logger), and next/link's
+// automatic viewport prefetching would fetch that route — and log a phantom
+// click — the moment the button scrolls into view, not when a visitor
+// actually clicks it. Internal content navigation (Header, LinkInBioList,
+// BreadcrumbNav) uses next/link instead; this one stays an anchor by design.
+
 export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(function ButtonLink(
   { variant = 'primary', className = '', ...props },
   ref,

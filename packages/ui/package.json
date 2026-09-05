@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@italy-tours/config": "workspace:*",
+    "next": "15.4.11",
     "react": "^19.0.0"
   },
   "devDependencies": {

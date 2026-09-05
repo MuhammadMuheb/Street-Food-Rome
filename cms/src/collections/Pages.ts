@@ -13,6 +13,7 @@ import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
 import { keywordMapCollisionCheck } from '../hooks/keywordMapCollisionCheck';
 import { afterChangePublishRevalidate } from '../hooks/afterChangePublishRevalidate';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 import { HeroBlock } from '../blocks/HeroBlock';
 import { RichTextBlock } from '../blocks/RichTextBlock';
 import { TourComparisonBlock } from '../blocks/TourComparisonBlock';
@@ -80,10 +81,17 @@ export const Pages: CollectionConfig = {
     },
     { name: 'metaTitle', type: 'text', maxLength: 60, required: true },
     { name: 'metaDesc', type: 'textarea', required: true },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
   ],
   indexes: [{ fields: ['site', 'slug'], unique: true }],
   hooks: {
     beforeValidate: [keywordMapCollisionCheck],
+    beforeChange: [setOwnerFromReqUser],
     afterChange: [afterChangePublishRevalidate],
   },
 };

@@ -47,6 +47,8 @@ export interface ResolvedSite {
   status: SiteStatus;
   language: SiteLanguage;
   themeTokens: ThemeTokens;
+  /** Sites.gaId — a GA4 "G-XXXXXXX" measurement id, or null until a real one is set. */
+  gaId: string | null;
 }
 
 /** Request headers the middleware stamps onto every resolved, live request. */
@@ -54,9 +56,11 @@ export const SITE_REQUEST_HEADERS = {
   siteId: 'x-site-id',
   siteType: 'x-site-type',
   siteSlug: 'x-site-slug',
+  siteDomain: 'x-site-domain',
   siteNiche: 'x-site-niche',
   siteLanguage: 'x-site-language',
   siteTemplateId: 'x-site-template-id',
+  siteGaId: 'x-site-ga-id',
   themeTokens: 'x-theme-tokens',
 } as const;
 

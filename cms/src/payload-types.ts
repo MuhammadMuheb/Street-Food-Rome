@@ -206,6 +206,10 @@ export interface Site {
    * Shared key linking an EN hero to its IT sibling for hreflang pairing.
    */
   hreflangGroup?: string | null;
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -220,6 +224,10 @@ export interface Template {
    * Maps to packages/templates/src/registry.ts.
    */
   templateKey: 't1-monument' | 't2-dayzia' | 't3-food' | 't4-cooking' | 't5-vehicle' | 't6-photo';
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -232,6 +240,10 @@ export interface Partner {
   name: string;
   key: 'getyourguide' | 'viator' | 'tiqets' | 'civitatis';
   affiliateId: string;
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -305,6 +317,10 @@ export interface Page {
     ('TouristAttraction' | 'TouristTrip' | 'Product' | 'FAQPage' | 'BreadcrumbList' | 'Course' | 'Service')[] | null;
   metaTitle: string;
   metaDesc: string;
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -315,6 +331,10 @@ export interface Page {
 export interface Media {
   id: number;
   alt: string;
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -362,6 +382,10 @@ export interface Tour {
    * Own-experience notes — feeds "is it worth it" verdict copy.
    */
   firstHandNotes?: string | null;
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -374,6 +398,10 @@ export interface Author {
   name: string;
   bio?: string | null;
   avatar?: (number | null) | Media;
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -390,6 +418,10 @@ export interface Redirect {
   fromPath: string;
   toUrl: string;
   code: '301' | '302';
+  /**
+   * Account this record belongs to.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -408,6 +440,10 @@ export interface ClickEvent {
   partner?: ('getyourguide' | 'viator' | 'tiqets' | 'civitatis') | null;
   referrer?: string | null;
   userAgent?: string | null;
+  /**
+   * Account this record belongs to. Left blank on clicks logged by clickTracking.ts (an anonymous visitor action, no admin session) — backfilled for historical rows instead.
+   */
+  owner?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -557,6 +593,7 @@ export interface SitesSelect<T extends boolean = true> {
   status?: T;
   language?: T;
   hreflangGroup?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -611,6 +648,7 @@ export interface PagesSelect<T extends boolean = true> {
   schemaType?: T;
   metaTitle?: T;
   metaDesc?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -630,6 +668,7 @@ export interface ToursSelect<T extends boolean = true> {
   niche?: T;
   image?: T;
   firstHandNotes?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -642,6 +681,7 @@ export interface RedirectsSelect<T extends boolean = true> {
   fromPath?: T;
   toUrl?: T;
   code?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -653,6 +693,7 @@ export interface AuthorsSelect<T extends boolean = true> {
   name?: T;
   bio?: T;
   avatar?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -664,6 +705,7 @@ export interface PartnersSelect<T extends boolean = true> {
   name?: T;
   key?: T;
   affiliateId?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -674,6 +716,7 @@ export interface PartnersSelect<T extends boolean = true> {
 export interface TemplatesSelect<T extends boolean = true> {
   name?: T;
   templateKey?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -683,6 +726,7 @@ export interface TemplatesSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -706,6 +750,7 @@ export interface ClickEventsSelect<T extends boolean = true> {
   partner?: T;
   referrer?: T;
   userAgent?: T;
+  owner?: T;
   updatedAt?: T;
   createdAt?: T;
 }

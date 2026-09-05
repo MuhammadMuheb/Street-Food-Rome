@@ -11,6 +11,7 @@
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
 import { afterChangePublishRevalidate } from '../hooks/afterChangePublishRevalidate';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const Sites: CollectionConfig = {
   slug: 'sites',
@@ -119,8 +120,15 @@ export const Sites: CollectionConfig = {
       type: 'text',
       admin: { description: 'Shared key linking an EN hero to its IT sibling for hreflang pairing.' },
     },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
   ],
   hooks: {
+    beforeChange: [setOwnerFromReqUser],
     afterChange: [afterChangePublishRevalidate],
   },
 };

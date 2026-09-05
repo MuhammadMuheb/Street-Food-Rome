@@ -2,6 +2,8 @@
  * packages/ui/src/blocks/BreadcrumbNav.tsx — visible breadcrumb trail. Pairs
  * with the BreadcrumbList JSON-LD builder in packages/seo/src/schema.
  */
+import Link from 'next/link';
+
 export interface BreadcrumbItem {
   label: string;
   href: string;
@@ -21,9 +23,9 @@ export function BreadcrumbNav({ items }: BreadcrumbNavProps) {
             {index === items.length - 1 ? (
               <span aria-current="page">{item.label}</span>
             ) : (
-              <a href={item.href} className="hover:text-foreground">
+              <Link href={item.href} className="hover:text-foreground">
                 {item.label}
-              </a>
+              </Link>
             )}
           </li>
         ))}

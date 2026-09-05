@@ -26,8 +26,14 @@ import { redirectSiteFactory } from './endpoints/redirectSiteFactory';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const serverURL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+
 export default buildConfig({
-  serverURL: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  serverURL,
+  // Payload's cookie-auth JWT extraction falls back to checking Sec-Fetch-Site
+  // once any CSRF allowlist is configured; leaving this empty was never
+  // actually the safe default it looks like — set it explicitly.
+  csrf: [serverURL],
   admin: {
     user: Users.slug,
   },

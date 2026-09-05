@@ -28,6 +28,12 @@ export interface TemplatePageData {
   title: string;
   heroImageUrl?: string | null;
   bodyHtml?: string | null;
+  /** First-hand "is it worth it" verdict — sourced from the page's primary
+   * featured tour's Tours.firstHandNotes (see fetchPageData.ts). Optional:
+   * only streetfoodrome's MoneyPageLayout renders it today, but it lives on
+   * the shared page-data shape so any other money-page-flavored layout can
+   * pick it up the same way. */
+  verdict?: string | null;
   faqs: TemplateFaq[];
   tours: TourCardData[];
   author?: TemplateAuthor | null;

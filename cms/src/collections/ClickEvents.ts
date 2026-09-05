@@ -8,6 +8,7 @@
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const ClickEvents: CollectionConfig = {
   slug: 'click-events',
@@ -33,6 +34,19 @@ export const ClickEvents: CollectionConfig = {
     },
     { name: 'referrer', type: 'text' },
     { name: 'userAgent', type: 'text' },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Account this record belongs to. Left blank on clicks logged by clickTracking.ts (an anonymous visitor action, no admin session) — backfilled for historical rows instead.',
+      },
+    },
   ],
   timestamps: true,
+  hooks: {
+    beforeChange: [setOwnerFromReqUser],
+  },
 };

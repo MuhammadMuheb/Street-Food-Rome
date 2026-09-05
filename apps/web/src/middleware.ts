@@ -43,9 +43,19 @@ const UNRESOLVED_DOMAIN_PATH = '/unresolved-domain';
 
 const EXCLUDED_PATH_PREFIXES = ['/_next', '/api', '/admin', '/favicon.ico', '/sitemap.xml', '/robots.txt'];
 const EXCLUDED_EXTENSIONS = /\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$/;
+// Next's dynamic icon-file convention ((site)/icon.tsx) serves at
+// "/icon-<hash>", not "/icon/..." — no separating slash, so it needs its own
+// prefix check rather than fitting EXCLUDED_PATH_PREFIXES's pattern. Same
+// reasoning as sitemap.xml/robots.txt: it resolves its own site directly
+// from the Host header (see icon.tsx) rather than through getCurrentSite(),
+// so an unresolved domain must reach it as-is instead of being rewritten to
+// /unresolved-domain first — otherwise the browser gets that page's HTML
+// back where it expected image bytes, and silently shows no favicon at all.
+const ICON_ROUTE_PREFIX = '/icon';
 
 function isExcludedFromTenantResolution(pathname: string): boolean {
   return EXCLUDED_PATH_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)) ||
+    pathname.startsWith(ICON_ROUTE_PREFIX) ||
     EXCLUDED_EXTENSIONS.test(pathname);
 }
 
@@ -107,9 +117,11 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   requestHeaders.set(SITE_REQUEST_HEADERS.siteId, site.id);
   requestHeaders.set(SITE_REQUEST_HEADERS.siteType, site.type);
   requestHeaders.set(SITE_REQUEST_HEADERS.siteSlug, site.slug);
+  requestHeaders.set(SITE_REQUEST_HEADERS.siteDomain, site.domain);
   requestHeaders.set(SITE_REQUEST_HEADERS.siteNiche, site.niche);
   requestHeaders.set(SITE_REQUEST_HEADERS.siteLanguage, site.language);
   requestHeaders.set(SITE_REQUEST_HEADERS.siteTemplateId, site.templateKey ?? '');
+  requestHeaders.set(SITE_REQUEST_HEADERS.siteGaId, site.gaId ?? '');
   requestHeaders.set(SITE_REQUEST_HEADERS.themeTokens, themeTokenHeader);
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });

@@ -5,6 +5,7 @@
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const Partners: CollectionConfig = {
   slug: 'partners',
@@ -25,5 +26,14 @@ export const Partners: CollectionConfig = {
       options: ['getyourguide', 'viator', 'tiqets', 'civitatis'],
     },
     { name: 'affiliateId', type: 'text', required: true },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
   ],
+  hooks: {
+    beforeChange: [setOwnerFromReqUser],
+  },
 };

@@ -1,14 +1,18 @@
 /**
  * apps/web/src/sites/streetfoodrome/layouts/MoneyPageLayout.tsx — money page:
- * hero, body, tour comparison, author box, FAQ, closing CTA. One primary CTA
- * plus one contextual link per blueprint §5.2's structural requirements —
- * the primary CTA is the first tour's booking link inside TourComparison,
+ * hero, body, tour comparison, first-hand verdict, author box, FAQ, closing
+ * CTA, plus a persistent mobile sticky CTA (doc 05 §6: money pages need a
+ * "sticky/repeated CTA" and an "is it worth it" verdict on top of the
+ * baseline per-page requirements). One primary CTA plus one contextual link
+ * per blueprint §5.2's structural requirements — the primary CTA is the
+ * first tour's booking link (both in TourComparison and the sticky bar),
  * the contextual link is the FAQ's own copy.
  */
-import { AuthorBox, FAQ, Container, CTA } from '@italy-tours/ui';
+import { AuthorBox, FAQ, Container, CTA, StickyCTA } from '@italy-tours/ui';
 import { Hero } from '../components/Hero';
 import { NeighbourhoodGuide } from '../components/NeighbourhoodGuide';
 import { TourComparison } from '../components/TourComparison';
+import { VerdictBlock } from '../components/VerdictBlock';
 import type { StreetFoodRomePageProps } from '../types';
 
 export function MoneyPageLayout({ page }: StreetFoodRomePageProps) {
@@ -19,6 +23,7 @@ export function MoneyPageLayout({ page }: StreetFoodRomePageProps) {
       <Hero title={page.title} imageUrl={page.heroImageUrl} />
       {page.bodyHtml ? <NeighbourhoodGuide heading="What to expect" bodyHtml={page.bodyHtml} /> : null}
       <TourComparison tours={page.tours} />
+      {page.verdict ? <VerdictBlock verdict={page.verdict} /> : null}
       {page.author ? (
         <Container className="py-8">
           <AuthorBox name={page.author.name} bio={page.author.bio ?? undefined} avatarUrl={page.author.avatarUrl ?? undefined} />
@@ -32,6 +37,9 @@ export function MoneyPageLayout({ page }: StreetFoodRomePageProps) {
       <Container className="py-12">
         <CTA heading="Ready to book?" primary={{ label: 'Reserve your spot', href: primaryTourHref }} />
       </Container>
+      {/* Mobile-only persistent CTA — doc 05's "sticky/repeated CTA" requirement. */}
+      <StickyCTA label="Reserve your spot" href={primaryTourHref} />
+      <div className="h-16 sm:hidden" aria-hidden />
     </>
   );
 }

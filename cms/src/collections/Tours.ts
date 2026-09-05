@@ -8,6 +8,7 @@
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const Tours: CollectionConfig = {
   slug: 'tours',
@@ -75,5 +76,14 @@ export const Tours: CollectionConfig = {
       type: 'textarea',
       admin: { description: 'Own-experience notes — feeds "is it worth it" verdict copy.' },
     },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
   ],
+  hooks: {
+    beforeChange: [setOwnerFromReqUser],
+  },
 };

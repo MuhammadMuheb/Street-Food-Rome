@@ -12,10 +12,12 @@ export interface CurrentSite {
   id: string;
   type: SiteType;
   slug: string;
+  domain: string;
   niche: SiteNiche;
   language: SiteLanguage;
   templateKey: string | null;
   themeTokens: ThemeTokens;
+  gaId: string | null;
 }
 
 /** Reads the resolved site for the current request off its headers. Null off-site (e.g. `/unresolved-domain`). */
@@ -33,9 +35,11 @@ export async function getCurrentSite(): Promise<CurrentSite | null> {
     id,
     type,
     slug,
+    domain: headerList.get(SITE_REQUEST_HEADERS.siteDomain) ?? '',
     niche: (headerList.get(SITE_REQUEST_HEADERS.siteNiche) as SiteNiche | null) ?? 'monument',
     language: (headerList.get(SITE_REQUEST_HEADERS.siteLanguage) as SiteLanguage | null) ?? 'en',
     templateKey: templateKey ? templateKey : null,
     themeTokens: { ...DEFAULT_THEME_TOKENS, ...parseThemeTokens(headerList.get(SITE_REQUEST_HEADERS.themeTokens)) },
+    gaId: headerList.get(SITE_REQUEST_HEADERS.siteGaId) || null,
   };
 }

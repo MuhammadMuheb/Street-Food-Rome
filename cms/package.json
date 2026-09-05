@@ -19,7 +19,12 @@
     "seed:demo": "dotenv -e ../infra/env/.env -- tsx src/seed/seedDemoSite.ts",
     "seed:templates": "dotenv -e ../infra/env/.env -- tsx src/seed/seed-templates.ts",
     "site:publish": "dotenv -e ../infra/env/.env -- tsx src/seed/publishSite.ts",
-    "seed:streetfoodrome": "dotenv -e ../infra/env/.env -- tsx src/seed/seedStreetFoodRome.ts"
+    "seed:streetfoodrome": "dotenv -e ../infra/env/.env -- tsx src/seed/seedStreetFoodRome.ts",
+    "seed:instagram-offer": "dotenv -e ../infra/env/.env -- tsx src/seed/seedInstagramOfferPage.ts",
+    "seed:food-match": "dotenv -e ../infra/env/.env -- tsx src/seed/seedFoodMatchPage.ts",
+    "site:delete": "dotenv -e ../infra/env/.env -- tsx src/seed/deleteSite.ts",
+    "create:owner": "dotenv -e ../infra/env/.env -- tsx src/seed/createOwnerUser.ts",
+    "backfill:owner": "dotenv -e ../infra/env/.env -- tsx src/seed/backfillOwner.ts"
   },
   "dependencies": {
     "@italy-tours/config": "workspace:*",

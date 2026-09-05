@@ -4,6 +4,7 @@
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const Authors: CollectionConfig = {
   slug: 'authors',
@@ -18,5 +19,14 @@ export const Authors: CollectionConfig = {
     { name: 'name', type: 'text', required: true },
     { name: 'bio', type: 'textarea' },
     { name: 'avatar', type: 'upload', relationTo: 'media' },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
   ],
+  hooks: {
+    beforeChange: [setOwnerFromReqUser],
+  },
 };

@@ -54,6 +54,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     status: site.status,
     language: site.language,
     themeTokens: site.themeTokens as ThemeTokens,
+    gaId: site.gaId || null,
   };
 
   return NextResponse.json(resolved, {

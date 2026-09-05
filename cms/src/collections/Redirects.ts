@@ -8,6 +8,7 @@
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const Redirects: CollectionConfig = {
   slug: 'redirects',
@@ -36,6 +37,15 @@ export const Redirects: CollectionConfig = {
         { label: '302 (Temporary)', value: '302' },
       ],
     },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
   ],
   indexes: [{ fields: ['site', 'fromPath'], unique: true }],
+  hooks: {
+    beforeChange: [setOwnerFromReqUser],
+  },
 };

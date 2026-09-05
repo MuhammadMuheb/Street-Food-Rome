@@ -3,24 +3,30 @@
  * optional catch-all (`[[...segments]]`) types `segments` as possibly
  * `undefined` and `searchParams` values as possibly `undefined`; Payload's
  * `RootPage`/`NotFoundPage`/`generatePageMetadata` types don't allow either.
- * Both are real values at runtime (Next always supplies an object here) —
- * this just narrows the types to match what Payload expects.
+ *
+ * Also: when `not-found.tsx` here is invoked as the generic 404 boundary
+ * (a `notFound()` call bubbling up from somewhere else in the tree, not a
+ * direct request to an unmatched `/admin/*` path), Next renders it with NO
+ * props at all — `params`/`searchParams` themselves are `undefined`, not
+ * Promises. Both helpers tolerate that and fall back to empty.
  */
 export interface RawPageArgs {
-  params: Promise<{ segments?: string[] }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params?: Promise<{ segments?: string[] }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function normalizeParams(params: RawPageArgs['params']): Promise<{ segments: string[] }> {
-  const resolved = await params;
-  return { segments: resolved.segments ?? [] };
+  const resolved = params ? await params : undefined;
+  return { segments: resolved?.segments ?? [] };
 }
 
 export async function normalizeSearchParams(searchParams: RawPageArgs['searchParams']): Promise<{ [key: string]: string | string[] }> {
-  const resolved = await searchParams;
+  const resolved = searchParams ? await searchParams : undefined;
   const normalized: { [key: string]: string | string[] } = {};
-  for (const [key, value] of Object.entries(resolved)) {
-    if (value !== undefined) normalized[key] = value;
+  if (resolved) {
+    for (const [key, value] of Object.entries(resolved)) {
+      if (value !== undefined) normalized[key] = value;
+    }
   }
   return normalized;
 }

@@ -5,6 +5,7 @@
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
+import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -16,5 +17,16 @@ export const Media: CollectionConfig = {
     delete: isAdmin,
   },
   upload: true,
-  fields: [{ name: 'alt', type: 'text', required: true }],
+  fields: [
+    { name: 'alt', type: 'text', required: true },
+    {
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: { position: 'sidebar', description: 'Account this record belongs to.' },
+    },
+  ],
+  hooks: {
+    beforeChange: [setOwnerFromReqUser],
+  },
 };

@@ -6,6 +6,7 @@ import { AuthorBox, FAQ, Container } from '@italy-tours/ui';
 import { Hero } from '../components/Hero';
 import { NeighbourhoodGuide } from '../components/NeighbourhoodGuide';
 import { TourComparison } from '../components/TourComparison';
+import { FoodMatchTeaser } from '../components/FoodMatchTeaser';
 import type { StreetFoodRomePageProps } from '../types';
 
 export function HomeLayout({ page }: StreetFoodRomePageProps) {
@@ -13,6 +14,7 @@ export function HomeLayout({ page }: StreetFoodRomePageProps) {
     <>
       <Hero title={page.title} imageUrl={page.heroImageUrl} />
       {page.bodyHtml ? <NeighbourhoodGuide heading="Welcome" bodyHtml={page.bodyHtml} /> : null}
+      <FoodMatchTeaser />
       <TourComparison tours={page.tours} />
       {page.author ? (
         <Container className="py-8">
