@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
+    "generate:migration": "dotenv -e ../infra/env/.env -- payload migrate:create",
     "seed:demo": "dotenv -e ../infra/env/.env -- tsx src/seed/seedDemoSite.ts",
     "seed:templates": "dotenv -e ../infra/env/.env -- tsx src/seed/seed-templates.ts",
     "site:publish": "dotenv -e ../infra/env/.env -- tsx src/seed/publishSite.ts",

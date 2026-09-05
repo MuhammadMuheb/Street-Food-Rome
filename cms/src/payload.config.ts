@@ -24,6 +24,7 @@ import { Media } from './collections/Media';
 import { ClickEvents } from './collections/ClickEvents';
 import { redirectSiteFactory } from './endpoints/redirectSiteFactory';
 import { resolveServerUrl } from './lib/resolveServerUrl';
+import { migrations } from './migrations';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +46,18 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI,
     },
+    // The postgres adapter only auto-syncs schema changes when
+    // NODE_ENV !== 'production' (see its own connect.js) — in production it
+    // does nothing at all unless given `prodMigrations` explicitly, in which
+    // case it applies whatever's pending here on cold start. Without this, a
+    // brand-new production database never gets its tables created — every
+    // query fails with "relation does not exist" and nothing points at why.
+    // `src/migrations/` is checked in for exactly this reason (see that
+    // folder's own migrate:create output) — regenerate it with
+    // `pnpm --filter @italy-tours/cms generate:migration <name>` after any
+    // collection schema change, the same way `payload-types.ts` gets
+    // regenerated after any typed-field change.
+    prodMigrations: migrations,
   }),
   secret: process.env.PAYLOAD_SECRET ?? '',
   typescript: {
