@@ -6,7 +6,11 @@
  * fields (not tours/author/FAQs) and Next calls `generateMetadata` on every
  * request independently of the page component, so this stays a cheap,
  * narrow query rather than reusing the fuller render-props fetch.
+ *
+ * Also cached (on-demand ISR) with the same `site:`/`page:` tags as
+ * fetchPageData.ts — see that file's comment for the full reasoning.
  */
+import { unstable_cache } from 'next/cache';
 import { getPayload } from 'payload';
 import config from '@italy-tours/cms/payload.config';
 import type { SeoPage } from '@italy-tours/seo';
@@ -21,6 +25,13 @@ function mediaUrl(value: unknown): string | null {
 }
 
 export async function fetchPageMeta(site: CurrentSite, slug: string): Promise<SeoPage | null> {
+  return unstable_cache(() => fetchPageMetaUncached(site, slug), ['page-meta', site.id, slug], {
+    tags: [`site:${site.domain}`, `page:${site.id}:${slug}`],
+    revalidate: 3600,
+  })();
+}
+
+async function fetchPageMetaUncached(site: CurrentSite, slug: string): Promise<SeoPage | null> {
   const payload = await getPayload({ config });
 
   const result = await payload.find({

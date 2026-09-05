@@ -11,12 +11,13 @@ import type { ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react';
 type Variant = 'primary' | 'accent' | 'outline';
 
 const VARIANT_CLASSES: Record<Variant, string> = {
-  primary: 'bg-primary text-background hover:opacity-90',
-  accent: 'bg-accent text-background hover:opacity-90',
-  outline: 'border border-primary text-primary hover:bg-primary hover:text-background',
+  primary: 'bg-primary text-inverse shadow-sm hover:shadow-md hover:-translate-y-px hover:opacity-90',
+  accent: 'bg-accent text-inverse shadow-sm hover:shadow-md hover:-translate-y-px hover:opacity-90',
+  outline: 'border border-primary text-primary hover:bg-primary hover:text-inverse',
 };
 
-const BASE_CLASSES = 'inline-flex items-center justify-center rounded-site px-5 py-2.5 font-medium transition-colors';
+const BASE_CLASSES =
+  'inline-flex items-center justify-center rounded-site px-5 py-2.5 font-medium transition-all duration-150';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;

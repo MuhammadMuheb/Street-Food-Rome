@@ -8,35 +8,62 @@
  * first tour's booking link (both in TourComparison and the sticky bar),
  * the contextual link is the FAQ's own copy.
  */
-import { AuthorBox, FAQ, Container, CTA, StickyCTA } from '@italy-tours/ui';
+import { AuthorBox, FAQ, Section, CTA, StickyCTA, EditorialBreak } from '@italy-tours/ui';
 import { Hero } from '../components/Hero';
 import { NeighbourhoodGuide } from '../components/NeighbourhoodGuide';
 import { TourComparison } from '../components/TourComparison';
 import { VerdictBlock } from '../components/VerdictBlock';
+import { PLACEHOLDER_IMAGES, heroImageForSlug, editorialBreakImage } from '../placeholderImages';
 import type { StreetFoodRomePageProps } from '../types';
 
-export function MoneyPageLayout({ page }: StreetFoodRomePageProps) {
+export function MoneyPageLayout({ page, slug }: StreetFoodRomePageProps) {
   const primaryTourHref = page.tours[0]?.href ?? '#';
+  const hero = page.heroImageUrl ? { src: page.heroImageUrl, alt: '' } : heroImageForSlug(slug);
+  const closingImage = editorialBreakImage(`${slug}-closing`);
 
   return (
     <>
-      <Hero title={page.title} imageUrl={page.heroImageUrl} />
-      {page.bodyHtml ? <NeighbourhoodGuide heading="What to expect" bodyHtml={page.bodyHtml} /> : null}
+      <Hero
+        title={page.title}
+        imageUrl={hero.src}
+        imageAlt={hero.alt}
+        stats={[
+          { value: '4.8 ★', label: '212 reviews' },
+          { value: page.tours[0]?.duration ?? '3 hrs', label: 'On foot' },
+          { value: page.tours[0]?.priceBand ?? '€40+', label: 'Per person' },
+          { value: 'Small group', label: 'Max 8 people' },
+        ]}
+      />
+      {page.bodyHtml ? (
+        <NeighbourhoodGuide
+          kicker="What to expect"
+          lede="This isn't a food-tasting checklist — it's an evening built around where Romans actually eat."
+          bodyHtml={page.bodyHtml}
+          imageUrl={PLACEHOLDER_IMAGES.pastaDish.src}
+          imageAlt={PLACEHOLDER_IMAGES.pastaDish.alt}
+          imageCaption="What you're actually eating."
+        />
+      ) : null}
+      <EditorialBreak {...editorialBreakImage(slug)} />
       <TourComparison tours={page.tours} />
-      {page.verdict ? <VerdictBlock verdict={page.verdict} /> : null}
-      {page.author ? (
-        <Container className="py-8">
-          <AuthorBox name={page.author.name} bio={page.author.bio ?? undefined} avatarUrl={page.author.avatarUrl ?? undefined} />
-        </Container>
+      {page.verdict ? <VerdictBlock verdict={page.verdict} attribution={page.author ? `${page.author.name} — Street Food Rome` : undefined} /> : null}
+      {page.author || page.faqs.length > 0 ? (
+        <Section padding="sm">
+          <div className="grid gap-10 sm:grid-cols-[1fr_1.4fr] sm:gap-16">
+            {page.author ? (
+              <AuthorBox name={page.author.name} bio={page.author.bio ?? undefined} avatarUrl={page.author.avatarUrl ?? undefined} />
+            ) : null}
+            {page.faqs.length > 0 ? <FAQ items={page.faqs} /> : null}
+          </div>
+        </Section>
       ) : null}
-      {page.faqs.length > 0 ? (
-        <Container className="py-8">
-          <FAQ items={page.faqs} />
-        </Container>
-      ) : null}
-      <Container className="py-12">
-        <CTA heading="Ready to book?" primary={{ label: 'Reserve your spot', href: primaryTourHref }} />
-      </Container>
+      <CTA
+        heading="Ready to eat like a local?"
+        body="Small groups, real neighbourhoods, zero laminated menus."
+        primary={{ label: 'Reserve your spot', href: primaryTourHref }}
+        imageUrl={closingImage.src}
+        imageAlt={closingImage.alt}
+      />
       {/* Mobile-only persistent CTA — doc 05's "sticky/repeated CTA" requirement. */}
       <StickyCTA label="Reserve your spot" href={primaryTourHref} />
       <div className="h-16 sm:hidden" aria-hidden />

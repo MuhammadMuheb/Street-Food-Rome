@@ -15,6 +15,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Container } from '../primitives/Container';
 import { MobileNavToggle } from './MobileNavToggle';
+import { ThemeToggle } from './ThemeToggle';
 
 export interface HeaderNavLink {
   label: string;
@@ -23,41 +24,57 @@ export interface HeaderNavLink {
 
 export interface HeaderProps {
   siteName: string;
-  /** Optional brand mark rendered before the site name — a bespoke hero
-   * passes its own logo component; templates and heroes without one yet
-   * simply render as text-only, unchanged from before this existed. */
+  /** Optional brand mark rendered in place of the plain-text site name — a
+   * bespoke hero passes its own full logo lockup (icon + wordmark already
+   * drawn together); templates and heroes without one yet fall back to
+   * `siteName` as text, unchanged from before this existed. When a logo is
+   * given, `siteName` still carries the link's accessible name instead of
+   * rendering twice next to it. */
   logo?: ReactNode;
   navLinks?: HeaderNavLink[];
+  /** Opt-in — only a site with its own light/dark logo variants and a
+   * theme built for both should show this (currently just streetfoodrome).
+   * Every other caller renders exactly as before. */
+  showThemeToggle?: boolean;
 }
 
-export function Header({ siteName, logo, navLinks = [] }: HeaderProps) {
+export function Header({ siteName, logo, navLinks = [], showThemeToggle = false }: HeaderProps) {
   return (
-    <header className="relative border-b border-foreground/10 bg-background">
-      <Container className="flex items-center justify-between py-4">
-        <Link href="/" className="flex items-center gap-2 font-heading text-lg font-bold text-foreground">
-          {logo}
-          {siteName}
+    <header className="sticky top-0 z-50 border-b border-foreground/10 bg-background/95 backdrop-blur-md transition-all">
+      <Container className="flex w-full items-center justify-between gap-8 py-6">
+        <Link
+          href="/"
+          aria-label={logo ? siteName : undefined}
+          className="flex shrink-0 items-center gap-2 font-heading text-lg font-bold text-foreground"
+        >
+          {logo ?? siteName}
         </Link>
-        {navLinks.length > 0 ? (
-          <>
-            {/* Desktop: full inline list. Below `sm`, this list would either
-                wrap onto the brand name or overflow the viewport, so it's
-                swapped for MobileNavToggle's hamburger + dropdown instead of
-                shrinking font/spacing until it merely *looks* like it fits. */}
-            <nav className="hidden sm:block">
-              <ul className="flex gap-6">
-                {navLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="text-sm font-medium text-foreground/80 hover:text-foreground">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <MobileNavToggle navLinks={navLinks} />
-          </>
-        ) : null}
+        <div className="flex items-center gap-6 lg:gap-8">
+          {navLinks.length > 0 ? (
+            <>
+              {/* Desktop: full inline list. Below `sm`, this list would either
+                  wrap onto the brand name or overflow the viewport, so it's
+                  swapped for MobileNavToggle's hamburger + dropdown instead of
+                  shrinking font/spacing until it merely *looks* like it fits. */}
+              <nav className="hidden sm:block">
+                <ul className="flex items-center gap-10 lg:gap-14">
+                  {navLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground/70 transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <MobileNavToggle navLinks={navLinks} />
+            </>
+          ) : null}
+          {showThemeToggle ? <ThemeToggle /> : null}
+        </div>
       </Container>
     </header>
   );

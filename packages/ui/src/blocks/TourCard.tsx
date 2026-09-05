@@ -6,6 +6,7 @@
  * `href` should always be a cloaked `/go/:slug` link (packages/affiliate) —
  * never the partner's raw affiliate URL.
  */
+import Image from 'next/image';
 import { Badge } from '../primitives/Badge';
 import { ButtonLink } from '../primitives/Button';
 
@@ -20,13 +21,20 @@ export interface TourCardData {
 
 export function TourCard({ title, href, priceBand, duration, imageUrl, imageAlt }: TourCardData) {
   return (
-    <div className="flex flex-col overflow-hidden rounded-site border border-foreground/10">
+    <div className="group flex flex-col overflow-hidden rounded-site border border-foreground/10 bg-background shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
       {imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={imageUrl} alt={imageAlt ?? ''} className="h-40 w-full object-cover" />
+        <div className="relative h-44 w-full overflow-hidden">
+          <Image
+            src={imageUrl}
+            alt={imageAlt ?? ''}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
       ) : null}
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="font-heading text-lg font-semibold text-foreground">{title}</h3>
+      <div className="flex flex-1 flex-col gap-2.5 p-5">
+        <h3 className="font-heading text-lg font-semibold leading-snug text-foreground">{title}</h3>
         <div className="flex gap-2">
           {priceBand ? <Badge>{priceBand}</Badge> : null}
           {duration ? <Badge>{duration}</Badge> : null}

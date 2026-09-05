@@ -13,7 +13,7 @@ export function FoodMatchTeaser() {
     <Container className="py-8">
       <Link
         href="/food-match"
-        className="group flex flex-col items-start gap-4 overflow-hidden rounded-site p-6 text-background transition-transform hover:scale-[1.01] sm:flex-row sm:items-center sm:justify-between sm:p-8"
+        className="group flex flex-col items-start gap-4 overflow-hidden rounded-site p-6 text-inverse transition-transform hover:scale-[1.01] sm:flex-row sm:items-center sm:justify-between sm:p-8"
         style={{ background: ROME_GRADIENT }}
       >
         <div>

@@ -117,7 +117,7 @@ export function FoodMatchQuiz({ tours }: { tours: TourCardData[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-site border border-foreground/10 bg-background">
+    <div className="overflow-hidden rounded-site border border-foreground/10 bg-background shadow-xl">
       {!isResult && currentQuestion ? (
         <div key={step} className="animate-fade-slide-in p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-3">
@@ -152,7 +152,7 @@ export function FoodMatchQuiz({ tours }: { tours: TourCardData[] }) {
         </div>
       ) : matchedTour ? (
         <div className="animate-fade-slide-in">
-          <div className="p-6 text-center text-background sm:p-8" style={{ background: ROME_GRADIENT }}>
+          <div className="p-6 text-center text-inverse sm:p-8" style={{ background: ROME_GRADIENT }}>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-90">Your match</p>
             <h3 className="mt-2 font-heading text-2xl font-bold sm:text-3xl">{matchedTour.title}</h3>
             <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-medium opacity-95">
@@ -163,7 +163,7 @@ export function FoodMatchQuiz({ tours }: { tours: TourCardData[] }) {
           <div className="flex flex-col items-center gap-3 p-6 sm:p-8">
             <a
               href={matchedTour.href}
-              className="w-full rounded-site px-5 py-3 text-center font-medium text-background transition-opacity hover:opacity-90 sm:w-auto sm:px-8"
+              className="w-full rounded-site px-5 py-3 text-center font-medium text-inverse transition-opacity hover:opacity-90 sm:w-auto sm:px-8"
               style={{ background: ROME_GRADIENT }}
             >
               Reserve your spot

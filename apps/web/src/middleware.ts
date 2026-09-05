@@ -17,6 +17,7 @@ import {
   SITE_REQUEST_HEADERS,
   SITE_THEME_COOKIE,
   serializeThemeTokens,
+  resolveLocalDevHostname,
   type ResolvedSite,
 } from '@italy-tours/config';
 
@@ -31,12 +32,43 @@ export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|api|admin|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)'],
 };
 
+// Local dev convenience: bare `http://localhost:3000` (no subdomain) has no
+// Site record of its own, so it would otherwise always hit "domain not
+// configured" — annoying when that's the address anyone typing "localhost:3000"
+// naturally lands on. In development only, treat that exact hostname as this
+// domain instead, purely for the internal site *lookup* — the browser's URL
+// bar is never touched (no redirect/rewrite to a different host), it's the
+// same mechanism as the `?__site=` override below, just with an implicit
+// default instead of a required query param. A subdomain like
+// t1-monument.localhost is NOT covered by this and still resolves (or
+// legitimately fails to) on its own — only the bare hostname gets a default.
+// (See @italy-tours/config's localDevTenant.ts — icon.tsx/robots.ts/sitemap.ts
+// apply this same fallback for the same reason, since none of them go through
+// this middleware.)
+
 const SITE_RESOLVER_PATH = '/api/internal/resolve-site';
 // Revalidated early via `afterChangePublishRevalidate`'s `revalidateTag(`site:${domain}`)` call.
 const SITE_CACHE_TTL_SECONDS = 300;
 // A hung DB connection inside resolve-site must not hang every single page
 // request — bound the wait and fall through to "unresolved" instead.
-const SITE_RESOLVE_TIMEOUT_MS = 4000;
+//
+// Longer in development on purpose: Next.js dev mode compiles each route on
+// its *first* request rather than ahead of time like a production build, and
+// this route's chain (resolve-site -> the full Payload config -> every
+// collection -> @italy-tours/governance, etc.) is large enough that a cold
+// compile can take longer than a short timeout. When that happens, every
+// single page request right after a fresh `next dev` start spuriously falls
+// through to "domain not configured" — indistinguishable from a real outage
+// to whoever's testing it, even though the underlying route would have
+// succeeded given a bit more time. 45s sounds generous, but a true cold
+// compile of this whole chain has been observed taking 45+ seconds on this
+// machine under load — this only ever costs real wall-clock time on the
+// very first request after a fresh `next dev` start (or after editing
+// middleware.ts itself); every request after that is fast because the route
+// is already compiled. Production builds are pre-compiled, so a
+// short timeout there is still correct — a genuinely hung DB connection
+// shouldn't hang every request.
+const SITE_RESOLVE_TIMEOUT_MS = process.env.NODE_ENV === 'development' ? 45000 : 4000;
 // Not "/_unresolved-domain" — Next's App Router treats a leading "_" as a
 // private-folder marker and excludes that route from routing entirely.
 const UNRESOLVED_DOMAIN_PATH = '/unresolved-domain';
@@ -94,9 +126,13 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   const hostname = normalizeHostname(req.headers.get('host'));
   if (!hostname) return NextResponse.next();
 
-  // Local dev: ?__site=streetfoodrome.com bypasses hostname resolution.
+  // Local dev: ?__site=streetfoodrome.com bypasses hostname resolution
+  // entirely; absent that, a bare "localhost" falls back to the default
+  // local tenant instead of hitting "domain not configured" (see
+  // localDevTenant.ts). Neither branch runs outside development.
   const devOverride = req.nextUrl.searchParams.get('__site');
-  const lookupHost = process.env.NODE_ENV === 'development' && devOverride ? devOverride : hostname;
+  const lookupHost =
+    process.env.NODE_ENV === 'development' && devOverride ? devOverride : resolveLocalDevHostname(hostname);
 
   const site = await resolveSite(lookupHost, req.nextUrl.origin);
 

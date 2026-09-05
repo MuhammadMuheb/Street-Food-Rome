@@ -15,6 +15,21 @@
  * header, per-site rather than one hardcoded property — every site owns its
  * own analytics. Renders nothing when a site has no gaId set yet (true for
  * every seeded site today; the CMS field is there, just empty).
+ *
+ * The inline script in <head> applies a stored dark-mode choice (see
+ * packages/ui/src/layout/ThemeToggle.tsx) to <html> before first paint —
+ * without it, the page would render light, then visibly flash to dark a
+ * moment after hydration for anyone who'd chosen dark last visit. It has to
+ * live here (a root layout, where Next.js allows a literal <head>) rather
+ * than in ThemeToggle itself, which only runs after React hydrates.
+ *
+ * Fraunces is loaded here (not via next/font) as a plain Google Fonts
+ * stylesheet, deliberately: a site's `fontHeading` theme token is a plain
+ * CSS value stamped from the database (see resolveThemeStyle below), and
+ * next/font only produces a *hashed*, build-scoped font-family name — a
+ * per-tenant DB string can never reference that name. A real font-family
+ * name ("Fraunces") is the only thing both the CSS var system and a literal
+ * SVG fontFamily attribute (LogoMark.tsx) can agree on.
  */
 import type { CSSProperties } from 'react';
 import { headers } from 'next/headers';
@@ -35,7 +50,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const gaId = headerList.get(SITE_REQUEST_HEADERS.siteGaId);
 
   return (
-    <html lang={language} style={themeStyle}>
+    // suppressHydrationWarning is scoped to this element only (React does not
+    // propagate it to descendants) — it exists for exactly this case: an
+    // attribute a script intentionally sets on <html> pre-hydration, which
+    // React's own render legitimately doesn't know about.
+    <html lang={language} style={themeStyle} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&display=swap"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('sfr-theme')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}",
+          }}
+        />
+      </head>
       <body>
         {gaId ? (
           <>

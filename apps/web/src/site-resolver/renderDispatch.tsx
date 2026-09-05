@@ -39,6 +39,7 @@ export interface HeroNavConfig {
   siteName: string;
   navLinks: HeaderNavLink[];
   logo?: ReactNode;
+  showThemeToggle?: boolean;
 }
 
 function humanizeSlug(slug: string): string {
@@ -49,11 +50,18 @@ function humanizeSlug(slug: string): string {
     .join(' ');
 }
 
-function withChrome(content: ReactElement, slug: string, siteName: string, navLinks: HeaderNavLink[], logo?: ReactNode): ReactElement {
+function withChrome(
+  content: ReactElement,
+  slug: string,
+  siteName: string,
+  navLinks: HeaderNavLink[],
+  logo?: ReactNode,
+  showThemeToggle?: boolean,
+): ReactElement {
   if (CHROME_EXEMPT_SLUGS.has(slug)) return content;
   return (
     <>
-      <Header siteName={siteName} logo={logo} navLinks={navLinks} />
+      <Header siteName={siteName} logo={logo} navLinks={navLinks} showThemeToggle={showThemeToggle} />
       {content}
       <Footer siteName={siteName} />
     </>
@@ -124,7 +132,7 @@ export async function renderDispatch(site: CurrentSite, slug: string): Promise<D
     } else {
       const nav = loaded.nav ?? { siteName: humanizeSlug(site.slug), navLinks: DEFAULT_NAV_LINKS };
       const HeroSite = loaded.component;
-      content = withChrome(<HeroSite {...props} />, slug, nav.siteName, nav.navLinks, nav.logo);
+      content = withChrome(<HeroSite {...props} />, slug, nav.siteName, nav.navLinks, nav.logo, nav.showThemeToggle);
     }
   } else {
     // slug === 'home' pages use the template's Home layout; everything else

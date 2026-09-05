@@ -2,7 +2,19 @@
  * apps/web/src/site-resolver/fetchPageData.ts — loads a `Pages` doc for the
  * current site + slug and normalizes it into the shape both hero pages and
  * `packages/templates` layouts expect (`TemplateComponentProps['page']`).
+ *
+ * Wrapped in `unstable_cache` (on-demand ISR): the tenant itself still
+ * resolves per-request via middleware headers (see renderDispatch.tsx's
+ * comment on why that stays fully dynamic), but the expensive part — the
+ * actual Payload/Postgres query — is cached per site+slug and invalidated by
+ * tag the moment that Page or its Site is published
+ * (cms/src/hooks/afterChangePublishRevalidate.ts already POSTs exactly these
+ * tag names to /api/internal/revalidate; this is the half that was missing).
+ * `revalidate: 3600` is a safety-net ceiling, not the primary invalidation
+ * path — a write that bypasses that hook (e.g. a script using
+ * `overrideAccess`) would otherwise never expire.
  */
+import { unstable_cache } from 'next/cache';
 import { getPayload } from 'payload';
 import config from '@italy-tours/cms/payload.config';
 import type { TemplatePageData } from '@italy-tours/templates';
@@ -43,6 +55,13 @@ function mediaUrl(value: unknown): string | undefined {
 }
 
 export async function fetchPageData(site: CurrentSite, slug: string): Promise<FetchedPage | null> {
+  return unstable_cache(() => fetchPageDataUncached(site, slug), ['page-data', site.id, slug], {
+    tags: [`site:${site.domain}`, `page:${site.id}:${slug}`],
+    revalidate: 3600,
+  })();
+}
+
+async function fetchPageDataUncached(site: CurrentSite, slug: string): Promise<FetchedPage | null> {
   const payload = await getPayload({ config });
 
   const result = await payload.find({

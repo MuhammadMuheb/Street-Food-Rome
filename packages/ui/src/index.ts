@@ -11,10 +11,13 @@ export * from './blocks/FAQ';
 export * from './blocks/CTA';
 export * from './blocks/AuthorBox';
 export * from './blocks/BreadcrumbNav';
+export * from './blocks/EditorialBreak';
+export * from './blocks/PullQuote';
 
 export * from './layout/Header';
 export * from './layout/Footer';
 export * from './layout/StickyCTA';
+export * from './layout/ThemeToggle';
 
 export * from './theme/ThemeProvider';
 export * from './theme/tokens.types';

@@ -294,7 +294,7 @@
   </div>
 
   <div class="stat-line"><b>3 of 6</b> build-sequence phases complete · <b>2</b> partial · <b>1</b> not started — detail below.</div>
-  <div class="stat-line" style="margin-top:2px">Doc 05 launch checklist: <b>4 of 9</b> done · <b>3</b> partial · <b>2</b> not done — up from 3/2/4 after this pass's fixes.</div>
+  <div class="stat-line" style="margin-top:2px">Doc 05 launch checklist: <b>5 of 9</b> done · <b>3</b> partial · <b>1</b> not done — up from 3/2/4 two passes ago.</div>
 
   <div class="sequence">
     <div class="phase"><span class="num">01</span><span class="label">Monorepo, Postgres, hostname middleware</span><span class="pill done">Done</span></div>
@@ -321,7 +321,7 @@
       <tr><td class="code">M7 · Analytics &amp; Tracking</td><td class="status"><span class="pill partial">Partial</span></td><td class="note">Click-event logging works. GA4 injection is now wired end-to-end (verified live with a test gaId) — but streetfoodrome's own Site.gaId is still empty, so nothing fires yet on the real site. GSC/Bing still not started.</td></tr>
       <tr><td class="code">M8 · Media / Photo</td><td class="status"><span class="pill pending">Not started</span></td><td class="note">No compression, gallery structuring, or alt-text enforcement. No real first-hand photos uploaded anywhere yet.</td></tr>
       <tr><td class="code">M9 · GEO / AI layer</td><td class="status"><span class="pill pending">Not started</span></td><td class="note">Confirmed this pass: entityBlock/quotableFaq builders exist in packages/seo but are never imported in apps/web — downgraded from "partial," since "exists in code" was doing a lot of work in that word.</td></tr>
-      <tr><td class="code">M10 · Governance</td><td class="status"><span class="pill pending">Not started</span></td><td class="note">No cross-link lint, no duplicate-content scan. Only the keyword-collision rule (a build-time check, not M10) is enforced.</td></tr>
+      <tr><td class="code">M10 · Governance</td><td class="status"><span class="pill done">Done</span></td><td class="note">Built this pass: @italy-tours/governance (cross-link + &gt;80% duplicate-content rules), wired as a Pages beforeValidate hook and a CI-gate scanner script. Verified both rules actually <i>block</i> real violations (tested live, not just clean-pass).</td></tr>
     </table>
   </section>
 
@@ -397,7 +397,7 @@
       <tr><td class="code">Keyword-map collision check pass</td><td class="status"><span class="pill done">Done</span></td><td class="note">Enforced at save-time; all 13 primary keywords confirmed unique, none exceed the 60-char title limit either.</td></tr>
       <tr><td class="code">Redirect domains assigned</td><td class="status"><span class="pill pending">Not done</span></td><td class="note">streetfoodrome.info / .it and the food-tour single-domain redirects from §8 don't exist yet.</td></tr>
       <tr><td class="code">GA4 + GSC + Bing verified</td><td class="status"><span class="pill partial">Partial</span></td><td class="note">Fixed this pass: GA4 injection is wired and verified working with a test id — but streetfoodrome's real Site.gaId is still empty, so nothing fires on the live site yet. GSC/Bing tokens still unused.</td></tr>
-      <tr><td class="code">Governance checks green</td><td class="status"><span class="pill pending">Not done</span></td><td class="note">packages/governance doesn't exist — no cross-link lint, no dup-content scan.</td></tr>
+      <tr><td class="code">Governance checks green</td><td class="status"><span class="pill done">Done</span></td><td class="note">Fixed this pass: @italy-tours/governance's cross-link + duplicate-content rules verified to actually block real violations, wired as both a CMS save-time hook and a CI gate (.github/workflows/ci.yml).</td></tr>
     </table>
 
     <p class="lede" style="margin-top:20px">Per-page requirement gaps (§6) — status after this pass's fixes:</p>
@@ -405,9 +405,13 @@
       <li><b>Sticky/repeated CTA — fixed.</b> <span class="mono">StickyCTA</span> is now wired into all 5 money pages, verified live on mobile viewport.</li>
       <li><b>"Is it worth it" verdict — fixed.</b> <span class="mono">VerdictBlock.tsx</span> is no longer dead code — now rendered on every money page, sourced from each tour's existing <span class="mono">firstHandNotes</span> (no new CMS field or invented copy needed).</li>
     </ul>
+    <p class="lede" style="margin-top:14px">ISR — resolved via a different route than originally planned:</p>
+    <ul class="checks">
+      <li><b>On-demand ISR via cache tags — done, verified live.</b> Route-level <span class="mono">revalidate</span> couldn't work here (this route tree reads <span class="mono">headers()</span> for tenant resolution, which forces fully dynamic rendering regardless). Instead, <span class="mono">fetchPageData</span>/<span class="mono">fetchPageMeta</span> are now wrapped in <span class="mono">unstable_cache</span>, tagged <span class="mono">site:&lt;domain&gt;</span>/<span class="mono">page:&lt;siteId&gt;:&lt;slug&gt;</span>. Verified with a request-count test: 3 requests to the same page → 1 real DB query.</li>
+      <li><b>Found and fixed a real pre-existing bug along the way:</b> <span class="mono">afterChangePublishRevalidate.ts</span>'s tag builder only accepted a <i>string</i> site id, but Postgres-backed Payload ids are numbers — so the page-level revalidate tag silently never fired for any page, ever, until this pass. Verified the fix live: publish → cache invalidates → next request shows fresh content.</li>
+    </ul>
     <p class="lede" style="margin-top:14px">Still open:</p>
     <ul class="risks">
-      <li><b>SSG/ISR only partially addressed.</b> <span class="mono">revalidate = 3600</span> is now exported on both site routes, but this route tree reads <span class="mono">headers()</span> to resolve the current tenant per request — which forces fully dynamic rendering in Next.js regardless of that export. True ISR needs a different tenant-resolution architecture (e.g. build-time params instead of request headers); flagging honestly rather than claiming this is "done."</li>
       <li><b>hreflang unused.</b> Moot until an IT sibling exists, but packages/seo's hreflang builder isn't wired in even structurally.</li>
     </ul>
   </section>
@@ -421,7 +425,8 @@
       <li>Per-domain <b>sitemap.xml</b> and <b>robots.txt</b> confirmed correct against a real Host header (13 URLs listed, crawling allowed for the live site).</li>
       <li><b>/go/:slug</b> cloaked redirect confirmed: 302s to the tagged affiliate URL and logs a ClickEvent.</li>
       <li><b>/api/internal/resolve-site</b> and the unresolved-domain fallback both behave correctly for unmapped hostnames.</li>
-      <li>Doc-05 quick-wins closed this pass: JSON-LD (Breadcrumb/FAQPage/Product) verified live with real data; GA4 wiring verified with a temporary test id then reverted; VerdictBlock + StickyCTA now render on all 5 money pages; <span class="mono">revalidate</span> exported on both site routes.</li>
+      <li>Doc-05 quick-wins closed last pass: JSON-LD, GA4 wiring, VerdictBlock + StickyCTA, <span class="mono">revalidate</span> exported.</li>
+      <li>This pass: M10 governance rules verified to actually block real violations (cross-link + duplicate-content, tested live); on-demand ISR verified with a request-count test (3 requests → 1 DB query) and a live publish → cache-invalidation round-trip; CI now runs typecheck + build + governance on every push/PR (<span class="mono">.github/workflows/ci.yml</span>).</li>
     </ul>
   </section>
 
@@ -431,9 +436,8 @@
     <h2>Gaps &amp; risks <span class="tag">platform-wide · doc 00/01</span></h2>
     <ul class="risks">
       <li><b>12 of 13 hero sites not started.</b> Doc 00 names undergroundcolosseum as hero #1; that build hasn't begun — streetfoodrome.com is the working reference instead.</li>
-      <li><b>Governance (M10) unenforced.</b> The no-cross-link and duplicate-content rules from doc 00 §8 exist only on paper — nothing in CI checks them yet.</li>
-      <li><b>No CI/infra.</b> Netlify config, redirects, and any automated check are all still to build — nothing currently gates a deploy.</li>
       <li><b>Factory has no admin UI.</b> Spinning up a redirect micro-site is an API call today, not the click-through flow doc 01 §5 describes.</li>
+      <li><b>Netlify deploy config still missing.</b> CI now gates the repo (typecheck/build/governance), but there's still no <span class="mono">netlify.toml</span>/<span class="mono">_redirects</span> — nothing deploys anywhere yet.</li>
     </ul>
   </section>
 
@@ -443,7 +447,7 @@
     <h2>Decision needed: what's next</h2>
     <p class="lede">Three directions are all reasonable from here — worth the team picking one rather than spreading thin across all three.</p>
     <ul class="opts">
-      <li><span class="h">Harden the core</span>Build governance (M10) and CI before scaling — catches cross-linking/duplicate-content mistakes before they multiply across 13 sites.</li>
+      <li><span class="h">Ship the deploy</span>Governance + CI are done. Netlify config is the one piece left before this could actually go live somewhere.</li>
       <li><span class="h">Scale content</span>Templates are done — start rolling hero sites 2–13 in parallel now, per the original build sequence.</li>
       <li><span class="h">Launch-ready one site</span>JSON-LD, sticky CTA, and verdict block are now done. What's left to actually launch: real GetYourGuide/Viator credentials, a first photo shoot, a real gaId, and the two redirect domains from §8.</li>
     </ul>

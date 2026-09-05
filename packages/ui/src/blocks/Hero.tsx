@@ -20,7 +20,7 @@ export interface HeroProps {
 
 export function Hero({ heading, subheading, imageUrl, imageAlt, primaryCta, children }: HeroProps) {
   return (
-    <div className="relative overflow-hidden bg-primary text-background">
+    <div className="relative overflow-hidden bg-primary text-inverse">
       {imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={imageUrl} alt={imageAlt ?? ''} className="absolute inset-0 h-full w-full object-cover opacity-40" />

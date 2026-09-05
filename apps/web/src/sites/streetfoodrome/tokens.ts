@@ -7,11 +7,11 @@
 import type { ThemeTokens } from '@italy-tours/config';
 
 export const streetFoodRomeFallbackTokens: ThemeTokens = {
-  colorPrimary: '#1c1917',
+  colorPrimary: '#0a0a0a',
   colorAccent: '#dc2626',
-  colorBackground: '#fffaf0',
-  colorForeground: '#1c1917',
-  fontHeading: 'Georgia, serif',
+  colorBackground: '#fafaf9',
+  colorForeground: '#0a0a0a',
+  fontHeading: 'Fraunces, Georgia, serif',
   fontBody: 'system-ui, sans-serif',
   radius: '0.25rem',
   heroStyle: 'editorial',

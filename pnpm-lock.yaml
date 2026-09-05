@@ -84,6 +84,9 @@ importers:
       '@italy-tours/config':
         specifier: workspace:*
         version: link:../packages/config
+      '@italy-tours/governance':
+        specifier: workspace:*
+        version: link:../packages/governance
       '@payloadcms/db-postgres':
         specifier: ^3.0.0
         version: 3.88.0(payload@3.88.0(graphql@16.14.2)(typescript@5.9.3))
@@ -128,6 +131,15 @@ importers:
 
   packages/config:
     devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+
+  packages/governance:
+    devDependencies:
+      '@italy-tours/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.5.4
         version: 5.9.3

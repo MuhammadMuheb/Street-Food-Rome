@@ -7,6 +7,7 @@
  * traffic arriving from a bio link has already decided to look, the job here
  * is to not make them hunt for the button.
  */
+import Image from 'next/image';
 import { Container } from '../primitives/Container';
 import { Badge } from '../primitives/Badge';
 import { ButtonLink } from '../primitives/Button';
@@ -22,14 +23,13 @@ export interface OfferHeroProps {
 
 export function OfferHero({ eyebrow, heading, subheading, imageUrl, imageAlt, primaryCta }: OfferHeroProps) {
   return (
-    <div className="relative overflow-hidden bg-primary text-background">
+    <div className="relative overflow-hidden bg-primary text-inverse">
       {imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={imageUrl} alt={imageAlt ?? ''} className="absolute inset-0 h-full w-full object-cover opacity-40" />
+        <Image src={imageUrl} alt={imageAlt ?? ''} fill sizes="100vw" className="object-cover opacity-40" priority />
       ) : null}
       <Container className="relative py-10 sm:py-16">
         {eyebrow ? (
-          <Badge className="bg-accent text-background">{eyebrow}</Badge>
+          <Badge className="bg-accent text-inverse">{eyebrow}</Badge>
         ) : null}
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">{heading}</h1>
         {subheading ? <p className="mt-3 max-w-xl text-base opacity-90">{subheading}</p> : null}

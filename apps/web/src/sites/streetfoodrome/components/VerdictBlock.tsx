@@ -2,14 +2,15 @@
  * apps/web/src/sites/streetfoodrome/components/VerdictBlock.tsx — bespoke
  * "is it worth it" first-hand verdict, closing out every money page. Feeds
  * from first-hand notes, establishing the credibility blueprint §5.2
- * requires on every page.
+ * requires on every page. Rendered as an oversized pull-quote — the
+ * centerpiece of its section, not a footnoted aside.
  */
-import { Section } from '@italy-tours/ui';
+import { Section, PullQuote } from '@italy-tours/ui';
 
-export function VerdictBlock({ verdict }: { verdict: string }) {
+export function VerdictBlock({ verdict, attribution }: { verdict: string; attribution?: string }) {
   return (
-    <Section heading="Is it worth it?">
-      <p className="border-l-4 border-accent pl-4 italic text-foreground/80">{verdict}</p>
+    <Section kicker="Is it worth it?" tint>
+      <PullQuote quote={verdict} attribution={attribution} />
     </Section>
   );
 }

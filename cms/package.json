@@ -24,10 +24,12 @@
     "seed:food-match": "dotenv -e ../infra/env/.env -- tsx src/seed/seedFoodMatchPage.ts",
     "site:delete": "dotenv -e ../infra/env/.env -- tsx src/seed/deleteSite.ts",
     "create:owner": "dotenv -e ../infra/env/.env -- tsx src/seed/createOwnerUser.ts",
-    "backfill:owner": "dotenv -e ../infra/env/.env -- tsx src/seed/backfillOwner.ts"
+    "backfill:owner": "dotenv -e ../infra/env/.env -- tsx src/seed/backfillOwner.ts",
+    "governance:scan": "dotenv -e ../infra/env/.env -- tsx src/seed/governanceScan.ts"
   },
   "dependencies": {
     "@italy-tours/config": "workspace:*",
+    "@italy-tours/governance": "workspace:*",
     "@payloadcms/db-postgres": "^3.0.0",
     "@payloadcms/richtext-lexical": "^3.0.0",
     "payload": "^3.0.0"

@@ -11,19 +11,26 @@ import type { StreetFoodRomePageProps } from '../types';
 
 export function FoodMatchLayout({ page }: StreetFoodRomePageProps) {
   return (
-    <Container className="py-10 sm:py-14">
-      <div className="mx-auto max-w-xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Street Food Rome</p>
-        <h1 className="mt-2 font-heading text-3xl font-bold text-foreground sm:text-4xl">{page.title}</h1>
-        {page.bodyHtml ? (
-          // eslint-disable-next-line react/no-danger
-          <div className="mt-3 text-foreground/70" dangerouslySetInnerHTML={{ __html: page.bodyHtml }} />
-        ) : null}
-      </div>
+    <div className="bg-tint py-16 sm:py-24">
+      <Container>
+        <div className="mx-auto max-w-xl text-center">
+          <p className="flex items-center justify-center gap-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-accent before:block before:h-px before:w-5 before:bg-accent after:block after:h-px after:w-5 after:bg-accent">
+            Street Food Rome
+          </p>
+          <h1 className="mt-4 font-heading text-4xl font-semibold leading-tight text-foreground sm:text-5xl">{page.title}</h1>
+          {page.bodyHtml ? (
+            <div
+              className="mt-4 text-foreground/70"
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: page.bodyHtml }}
+            />
+          ) : null}
+        </div>
 
-      <div className="mx-auto mt-8 max-w-xl">
-        <FoodMatchQuiz tours={page.tours} />
-      </div>
-    </Container>
+        <div className="mx-auto mt-10 max-w-xl">
+          <FoodMatchQuiz tours={page.tours} />
+        </div>
+      </Container>
+    </div>
   );
 }

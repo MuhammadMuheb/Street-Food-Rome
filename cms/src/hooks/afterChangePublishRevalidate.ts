@@ -16,8 +16,14 @@ function resolveTags(collectionSlug: string, doc: Record<string, unknown>): stri
   }
 
   if (collectionSlug === 'pages' && typeof doc.slug === 'string') {
-    const siteId = typeof doc.site === 'object' && doc.site !== null ? (doc.site as { id: string }).id : doc.site;
-    return typeof siteId === 'string' ? [`page:${siteId}:${doc.slug}`] : [];
+    const siteRef = doc.site;
+    // Postgres-backed Payload IDs are numbers, not strings — `doc.site` here
+    // is either a raw numeric id (afterChange hooks get the shallow, unpopulated
+    // relation by default) or a populated { id } object; a `typeof === 'string'`
+    // check on the former always failed, so this tag silently never fired for
+    // any page — the bug this replaces.
+    const siteId = typeof siteRef === 'object' && siteRef !== null ? (siteRef as { id: unknown }).id : siteRef;
+    return siteId !== undefined && siteId !== null ? [`page:${siteId}:${doc.slug}`] : [];
   }
 
   return [];

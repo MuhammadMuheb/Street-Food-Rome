@@ -9,12 +9,14 @@
  * Reachable at /instagram (see cms/src/seed/seedInstagramOfferPage.ts).
  */
 import { AuthorBox, FAQ, Container, OfferHero, LinkInBioList, StickyCTA } from '@italy-tours/ui';
+import { heroImageForSlug } from '../placeholderImages';
 import type { StreetFoodRomePageProps } from '../types';
 
 const QUICK_FACTS = ['3 hours, small group', 'First-hand guide, not a script', 'Instant confirmation'];
 
 export function InstagramOfferLayout({ page }: StreetFoodRomePageProps) {
   const primaryTourHref = page.tours[0]?.href ?? '#';
+  const hero = page.heroImageUrl ? { src: page.heroImageUrl, alt: '' } : heroImageForSlug('instagram');
 
   return (
     <>
@@ -22,7 +24,8 @@ export function InstagramOfferLayout({ page }: StreetFoodRomePageProps) {
         eyebrow="From our Instagram"
         heading={page.title}
         subheading={page.bodyHtml ? undefined : 'The exact food tour from our Reels — see it, then book it in under a minute.'}
-        imageUrl={page.heroImageUrl ?? undefined}
+        imageUrl={hero.src}
+        imageAlt={hero.alt}
         primaryCta={{ label: 'Reserve your spot', href: primaryTourHref }}
       />
 

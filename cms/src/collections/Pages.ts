@@ -5,13 +5,16 @@
  * `blocks`-typed body (constrained per-template in the admin UI and by the
  * Redirect Site Factory's page-seeding step to each template's blockLibrary),
  * and a quotable-FAQ array feeding the GEO/AI layer (M9,
- * packages/seo/src/geo/quotableFaq.ts). `beforeValidate` enforces the
- * platform's "no two pages on one site share a primary keyword" governance
- * rule at save time via `keywordMapCollisionCheck`.
+ * packages/seo/src/geo/quotableFaq.ts). `beforeValidate` enforces two
+ * platform governance rules at save time: "no two pages on one site share a
+ * primary keyword" (`keywordMapCollisionCheck`) and M10's "no cross-links
+ * between owned sites, no duplicate content across sites" (`governanceCheck`,
+ * doc 00 §8).
  */
 import type { CollectionConfig } from 'payload';
 import { isAdmin } from '../access/isAdmin';
 import { keywordMapCollisionCheck } from '../hooks/keywordMapCollisionCheck';
+import { governanceCheck } from '../hooks/governanceCheck';
 import { afterChangePublishRevalidate } from '../hooks/afterChangePublishRevalidate';
 import { setOwnerFromReqUser } from '../hooks/setOwnerFromReqUser';
 import { HeroBlock } from '../blocks/HeroBlock';
@@ -90,7 +93,7 @@ export const Pages: CollectionConfig = {
   ],
   indexes: [{ fields: ['site', 'slug'], unique: true }],
   hooks: {
-    beforeValidate: [keywordMapCollisionCheck],
+    beforeValidate: [keywordMapCollisionCheck, governanceCheck],
     beforeChange: [setOwnerFromReqUser],
     afterChange: [afterChangePublishRevalidate],
   },

@@ -17,7 +17,20 @@ import type { StreetFoodRomePageProps } from './types';
 
 export const nav: HeroNavConfig = {
   siteName: 'Street Food Rome',
-  logo: <LogoMark size={28} />,
+  // Both logo variants render; Tailwind's `dark:` classes pick which one is
+  // visible, so the swap happens in CSS the instant `.dark` toggles — no
+  // client JS deciding which logo to render, no hydration flicker.
+  logo: (
+    <>
+      <span className="dark:hidden">
+        <LogoMark height={40} variant="light" />
+      </span>
+      <span className="hidden dark:inline-flex">
+        <LogoMark height={40} variant="dark" />
+      </span>
+    </>
+  ),
+  showThemeToggle: true,
   navLinks: [
     { label: 'Home', href: '/' },
     { label: 'Food Tours', href: '/rome-street-food-tour' },
