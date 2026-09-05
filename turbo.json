@@ -8,7 +8,7 @@
     },
     "@italy-tours/cms#build": {
       "dependsOn": ["^build"],
-      "outputs": ["src/payload-types.ts", "src/app/(payload)/admin/importMap.js"]
+      "outputs": ["src/payload-types.ts", "src/app/[(]payload[)]/admin/importMap.js"]
     },
     "dev": {
       "cache": false,
