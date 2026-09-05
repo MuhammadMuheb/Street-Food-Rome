@@ -1,6 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["infra/env/.env.example", "infra/env/.env"],
+  "globalEnv": [
+    "DATABASE_URI",
+    "PAYLOAD_SECRET",
+    "NEXT_PUBLIC_SITE_URL",
+    "REVALIDATE_SECRET",
+    "OWNER_PASSWORD",
+    "VERCEL_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
