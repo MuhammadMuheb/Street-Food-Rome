@@ -9,6 +9,7 @@
  * waiting out `SITE_CACHE_TTL_SECONDS`.
  */
 import type { CollectionAfterChangeHook } from 'payload';
+import { resolveServerUrl } from '../lib/resolveServerUrl';
 
 function resolveTags(collectionSlug: string, doc: Record<string, unknown>): string[] {
   if (collectionSlug === 'sites' && typeof doc.domain === 'string') {
@@ -34,7 +35,7 @@ export const afterChangePublishRevalidate: CollectionAfterChangeHook = async ({ 
 
   if (tags.length === 0) return doc;
 
-  const revalidateUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/api/internal/revalidate`;
+  const revalidateUrl = `${resolveServerUrl()}/api/internal/revalidate`;
 
   try {
     await fetch(revalidateUrl, {

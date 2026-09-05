@@ -23,10 +23,11 @@ import { Templates } from './collections/Templates';
 import { Media } from './collections/Media';
 import { ClickEvents } from './collections/ClickEvents';
 import { redirectSiteFactory } from './endpoints/redirectSiteFactory';
+import { resolveServerUrl } from './lib/resolveServerUrl';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const serverURL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+const serverURL = resolveServerUrl();
 
 export default buildConfig({
   serverURL,
