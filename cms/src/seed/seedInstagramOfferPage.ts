@@ -10,8 +10,8 @@
  */
 import { getPayload } from 'payload';
 import config from '../payload.config';
+import { SITE_DOMAIN } from './streetFoodRomeContent';
 
-const SITE_DOMAIN = 'streetfoodrome.localhost';
 const PAGE_SLUG = 'instagram';
 const FLAGSHIP_TOUR_SLUG = 'trastevere-food-wine-walk';
 

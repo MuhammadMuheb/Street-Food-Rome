@@ -16,7 +16,7 @@
  * (affiliate URLs, partner id) is fabricated for local demo purposes, not a
  * real GetYourGuide account.
  */
-export const SITE_DOMAIN = 'streetfoodrome.localhost';
+export const SITE_DOMAIN = 'streetfoodrome.com';
 
 export const THEME_TOKENS = {
   colorPrimary: '#0a0a0a',

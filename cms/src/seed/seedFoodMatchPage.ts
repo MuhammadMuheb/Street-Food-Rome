@@ -11,8 +11,8 @@
  */
 import { getPayload } from 'payload';
 import config from '../payload.config';
+import { SITE_DOMAIN } from './streetFoodRomeContent';
 
-const SITE_DOMAIN = 'streetfoodrome.localhost';
 const PAGE_SLUG = 'food-match';
 const TOUR_SLUGS = ['trastevere-food-wine-walk', 'testaccio-market-food-tour', 'rome-food-wine-tasting', 'aperitivo-evening-experience'];
 

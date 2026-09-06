@@ -14,7 +14,7 @@
  * consistent going forward instead of relying on four copies staying in
  * sync by hand.
  */
-export const DEFAULT_LOCAL_TENANT_DOMAIN = 'streetfoodrome.localhost';
+export const DEFAULT_LOCAL_TENANT_DOMAIN = 'streetfoodrome.com';
 
 export function resolveLocalDevHostname(hostname: string): string {
   if (process.env.NODE_ENV === 'development' && hostname === 'localhost') {
