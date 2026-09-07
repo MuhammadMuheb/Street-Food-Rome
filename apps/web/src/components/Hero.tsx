@@ -9,8 +9,8 @@ const CHIPS = ['Trastevere', 'Testaccio', 'Suppli', 'Pizza al Taglio', 'Food Tou
 
 export function Hero({ imageUrl }: HeroProps) {
   return (
-    <section className="bg-ink">
-      <div className="relative h-[460px] w-full sm:h-[480px]">
+    <section>
+      <div className="relative h-[340px] w-full sm:h-[420px]">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -21,59 +21,48 @@ export function Hero({ imageUrl }: HeroProps) {
             className="object-cover"
           />
         ) : null}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to top, rgba(24,20,15,0.6) 0%, rgba(24,20,15,0.35) 45%, rgba(24,20,15,0.45) 100%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-black/35" />
 
-        <div
-          className="relative mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-6 text-center"
-          style={{ textShadow: '0 2px 24px rgba(24,20,15,0.65)' }}
-        >
-          <h1 className="font-display text-4xl font-bold leading-[1.1] text-paper sm:text-5xl md:text-6xl">
+        <div className="relative mx-auto flex h-full max-w-[896px] flex-col justify-center px-6">
+          <h1 className="font-sans text-[40px] font-extrabold leading-[1.15] text-white sm:text-[56px] sm:leading-[72px]">
             Rome&rsquo;s Ultimate Street Food &amp; Culinary Experiences
           </h1>
 
-          <form action="#" className="mt-8 w-full max-w-2xl">
-            <div className="flex items-center gap-3 rounded-full bg-paper p-2 pl-6 shadow-lg">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0 text-ink-muted" aria-hidden="true">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
-                <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-              <input
-                type="text"
-                name="q"
-                placeholder="Trastevere, Testaccio, Suppli, Pizza al Taglio…"
-                className="w-full bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="shrink-0 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-paper transition-colors hover:bg-accent-hover"
-              >
-                Search Tours
-              </button>
-            </div>
+          <form action="#" className="mt-8 flex items-center gap-2 rounded-2xl bg-white p-2 shadow-[0_8px_48px_rgba(45,51,57,0.16)]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="ml-3 shrink-0 text-[#6b7280]" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
+              <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+            <input
+              type="text"
+              name="q"
+              placeholder="Trastevere, Testaccio, Suppli, Pizza al Taglio…."
+              className="h-10 w-full bg-transparent text-base text-[#1a1a1a] placeholder:text-[#6b7280] focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="h-10 shrink-0 rounded-[6px] border border-[#f40051] px-2 text-base font-medium text-[#f40051]"
+            >
+              Search Tours
+            </button>
           </form>
         </div>
       </div>
 
-      {/* Category chips — separate light strip below the photo, not overlaid on it */}
-      <div className="border-b border-line bg-paper-tint">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* Category chips — separate light strip below the photo, matching the reference exactly */}
+      <div className="bg-[#f9fafa]">
+        <div className="mx-auto flex max-w-[896px] items-center gap-3 overflow-x-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {CHIPS.map((chip) => (
             <Link
               key={chip}
               href="#"
-              className="shrink-0 rounded-full border border-line-strong bg-paper px-5 py-2 text-sm font-semibold text-accent transition-colors hover:bg-accent hover:text-paper"
+              className="flex h-[42px] shrink-0 items-center rounded-lg border border-[#e8ebed] bg-white px-3 text-base font-bold text-[#f40051]"
             >
               {chip}
             </Link>
           ))}
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line-strong text-ink-muted">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#2b2e2f]">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
