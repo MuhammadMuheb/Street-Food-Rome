@@ -8,3 +8,5 @@ build/
 .env.local
 .DS_Store
 media/
+firebase-service-account*.json
+*firebase-adminsdk*.json
