@@ -1,3 +1,6 @@
+'use client';
+
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -5,9 +8,36 @@ interface HeroProps {
   imageUrl: string | null;
 }
 
-const CHIPS = ['Trastevere', 'Testaccio', 'Suppli', 'Pizza al Taglio', 'Food Tours'];
+const CHIPS = [
+  'Trastevere',
+  'Testaccio',
+  'Suppli',
+  'Pizza al Taglio',
+  'Food Tours',
+  'Testaccio Market',
+  'Aperitivo',
+  'Jewish Ghetto',
+  "Campo de' Fiori",
+  'Monti',
+  'Prati',
+  'San Lorenzo',
+  'Pigneto',
+  'Gelato',
+  'Coffee Culture',
+  'Cacio e Pepe',
+  'Trapizzino',
+  'Wine Tasting',
+  'Cooking Class',
+  'Market Tour',
+];
 
 export function Hero({ imageUrl }: HeroProps) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  function scrollBy(delta: number) {
+    scrollerRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
+  }
+
   return (
     <section>
       <div className="relative h-[340px] w-full sm:h-[420px]">
@@ -49,23 +79,45 @@ export function Hero({ imageUrl }: HeroProps) {
         </div>
       </div>
 
-      {/* Category chips — separate light strip below the photo, matching the reference exactly */}
+      {/* Category chips — separate light strip below the photo, functional scroll like the reference */}
       <div className="bg-[#f9fafa]">
-        <div className="mx-auto flex max-w-[896px] items-center gap-3 overflow-x-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {CHIPS.map((chip) => (
-            <Link
-              key={chip}
-              href="#"
-              className="flex h-[42px] shrink-0 items-center rounded-lg border border-[#e8ebed] bg-white px-3 text-base font-bold text-[#f40051]"
-            >
-              {chip}
-            </Link>
-          ))}
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#2b2e2f]">
+        <div className="mx-auto flex max-w-[1200px] items-center gap-2 px-6 py-6">
+          <button
+            type="button"
+            aria-label="Scroll categories left"
+            onClick={() => scrollBy(-320)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] bg-white text-[#2b2e2f] transition-colors hover:bg-[#f9fafa]"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m15 5-7 7 7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          <div
+            ref={scrollerRef}
+            className="flex flex-1 items-center gap-3 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {CHIPS.map((chip) => (
+              <Link
+                key={chip}
+                href="#"
+                className="flex h-[42px] shrink-0 items-center whitespace-nowrap rounded-lg border border-[#e8ebed] bg-white px-3 text-base font-bold text-[#f40051]"
+              >
+                {chip}
+              </Link>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            aria-label="Scroll categories right"
+            onClick={() => scrollBy(320)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] bg-white text-[#2b2e2f] transition-colors hover:bg-[#f9fafa]"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </span>
+          </button>
         </div>
       </div>
     </section>
