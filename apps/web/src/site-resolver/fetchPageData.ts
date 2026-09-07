@@ -1,25 +1,23 @@
 /**
- * apps/web/src/site-resolver/fetchPageData.ts — loads a `Pages` doc for the
- * current site + slug and normalizes it into the shape both hero pages and
- * `packages/templates` layouts expect (`TemplateComponentProps['page']`).
+ * apps/web/src/site-resolver/fetchPageData.ts — loads a Firestore page doc
+ * for the current site + slug and normalizes it into the shape both hero
+ * pages and `packages/templates` layouts expect (`TemplateComponentProps['page']`).
  *
  * Wrapped in `unstable_cache` (on-demand ISR): the tenant itself still
  * resolves per-request via middleware headers (see renderDispatch.tsx's
- * comment on why that stays fully dynamic), but the expensive part — the
- * actual Payload/Postgres query — is cached per site+slug and invalidated by
- * tag the moment that Page or its Site is published
- * (cms/src/hooks/afterChangePublishRevalidate.ts already POSTs exactly these
- * tag names to /api/internal/revalidate; this is the half that was missing).
- * `revalidate: 3600` is a safety-net ceiling, not the primary invalidation
- * path — a write that bypasses that hook (e.g. a script using
- * `overrideAccess`) would otherwise never expire.
+ * comment on why that stays fully dynamic), but the Firestore reads are
+ * cached per site+slug. Since content is now edited directly in the
+ * Firebase Console (no admin-panel publish hook to POST a revalidate call
+ * the way Payload's afterChangePublishRevalidate did), `revalidate: 3600`
+ * is the *only* invalidation path today — a Console edit takes up to an
+ * hour to show live. Call POST /api/internal/revalidate by hand
+ * (tags `site:<domain>` / `page:<domain>:<slug>`) after an edit if you need
+ * it sooner.
  */
 import { unstable_cache } from 'next/cache';
-import { getPayload } from 'payload';
-import config from '@italy-tours/cms/payload.config';
+import { getPageDoc, getToursBySlugs, getAuthor } from '@italy-tours/firebase';
 import type { TemplatePageData } from '@italy-tours/templates';
 import type { PageType } from '@italy-tours/config';
-import { lexicalToPlainHtml } from './lexicalToHtml';
 import type { CurrentSite } from './resolveSite';
 
 export interface FetchedPage {
@@ -27,86 +25,44 @@ export interface FetchedPage {
   page: TemplatePageData;
 }
 
-interface PageBodyBlock {
-  blockType: string;
-  content?: unknown;
-}
-
-interface FeaturedTour {
-  title: string;
-  slug: string;
-  priceBand?: string | null;
-  duration?: string | null;
-  image?: unknown;
-  firstHandNotes?: string | null;
-}
-
-interface PageFaq {
-  question: string;
-  answer: string;
-}
-
-function mediaUrl(value: unknown): string | undefined {
-  if (typeof value === 'object' && value !== null && 'url' in value) {
-    const url = (value as { url?: unknown }).url;
-    return typeof url === 'string' ? url : undefined;
-  }
-  return undefined;
-}
-
 export async function fetchPageData(site: CurrentSite, slug: string): Promise<FetchedPage | null> {
-  return unstable_cache(() => fetchPageDataUncached(site, slug), ['page-data', site.id, slug], {
-    tags: [`site:${site.domain}`, `page:${site.id}:${slug}`],
+  return unstable_cache(() => fetchPageDataUncached(site, slug), ['page-data', site.domain, slug], {
+    tags: [`site:${site.domain}`, `page:${site.domain}:${slug}`],
     revalidate: 3600,
   })();
 }
 
 async function fetchPageDataUncached(site: CurrentSite, slug: string): Promise<FetchedPage | null> {
-  const payload = await getPayload({ config });
-
-  const result = await payload.find({
-    collection: 'pages',
-    where: { and: [{ site: { equals: site.id } }, { slug: { equals: slug } }] },
-    limit: 1,
-    depth: 2,
-  });
-
-  const doc = result.docs[0];
+  const doc = await getPageDoc(site.domain, slug);
   if (!doc) return null;
 
-  const body = (doc.body ?? []) as PageBodyBlock[];
-  const richTextBlock = body.find((block) => block.blockType === 'richText');
-
-  const rawTours = ((doc.featuredTours ?? []) as Array<FeaturedTour | string>).filter(
-    (tour): tour is FeaturedTour => typeof tour === 'object',
-  );
-
-  const tours = rawTours.map((tour) => ({
+  const tourDocs = await getToursBySlugs(doc.featuredTourSlugs ?? []);
+  const tours = tourDocs.map((tour) => ({
     title: tour.title,
     href: `/go/${tour.slug}`,
     priceBand: tour.priceBand ?? undefined,
     duration: tour.duration ?? undefined,
-    imageUrl: mediaUrl(tour.image),
+    imageUrl: tour.imageUrl ?? undefined,
     imageAlt: tour.title,
   }));
 
   // "Is it worth it" verdict (doc 05 §6, money pages) — the primary featured
   // tour's own first-hand notes double as this without inventing new copy
-  // or a new CMS field; null when the page has no featured tour yet.
-  const verdict = rawTours[0]?.firstHandNotes ?? null;
+  // or a new field; null when the page has no featured tour yet.
+  const verdict = tourDocs[0]?.firstHandNotes ?? null;
 
-  const author = typeof doc.author === 'object' && doc.author !== null ? doc.author : null;
+  const author = doc.authorId ? await getAuthor(doc.authorId) : null;
 
   return {
     pageType: doc.type,
     page: {
       title: doc.title,
-      heroImageUrl: mediaUrl(doc.heroImage),
-      bodyHtml: richTextBlock ? lexicalToPlainHtml(richTextBlock.content) : null,
+      heroImageUrl: doc.heroImageUrl ?? undefined,
+      bodyHtml: doc.bodyHtml ?? null,
       verdict,
-      faqs: ((doc.faqs ?? []) as PageFaq[]).map((faq) => ({ question: faq.question, answer: faq.answer })),
+      faqs: doc.faqs ?? [],
       tours,
-      author: author ? { name: author.name, bio: author.bio, avatarUrl: mediaUrl(author.avatar) } : null,
+      author: author ? { name: author.name, bio: author.bio, avatarUrl: author.avatarUrl } : null,
     },
   };
 }

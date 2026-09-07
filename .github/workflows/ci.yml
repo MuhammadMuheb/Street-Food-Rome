@@ -1,10 +1,17 @@
 name: CI
 
-# Runs on every push/PR to main: typecheck, a real production build, and the
-# M10 governance scan (doc 00 §8) — fails the workflow (and blocks merge, if
-# branch protection requires this check) on any error. Three independent
-# jobs so a typecheck failure doesn't block you from seeing whether the
-# build or governance jobs would also have passed.
+# Runs on every push/PR to main: typecheck and a real production build.
+# Two independent jobs so a typecheck failure doesn't block you from seeing
+# whether the build would also have passed.
+#
+# The previous third job (M10 governance scan for duplicate content /
+# cross-links between owned sites) was removed along with Payload CMS — it
+# was a `beforeValidate` hook on the Pages collection
+# (cms/src/hooks/governanceCheck.ts), and Firestore has no equivalent
+# server-side hook on a direct Console edit. There's currently no automated
+# backstop for those two platform rules; re-introduce one (e.g. a scheduled
+# Cloud Function, or a script run by hand before publishing new pages) if
+# they matter again once there's more than one tenant site's worth of content.
 
 on:
   push:
@@ -13,10 +20,7 @@ on:
     branches: [main]
 
 env:
-  # Shared by the build and governance jobs — CI-only, not real secrets.
-  DATABASE_URI: postgres://postgres:postgres@localhost:5432/italy_tours_ci
-  PAYLOAD_SECRET: ci-only-secret-not-used-for-anything-real
-  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+  # CI-only, not real secrets.
   REVALIDATE_SECRET: ci-only-secret-not-used-for-anything-real
 
 jobs:
@@ -38,20 +42,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: italy_tours_ci
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -63,52 +53,5 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Production build (apps/web, incl. cms)
+      - name: Production build (apps/web)
         run: pnpm turbo run build --filter=@italy-tours/web
-
-  governance:
-    runs-on: ubuntu-latest
-    # M10 (doc 00 §8 / doc 01 §7): "no cross-links between owned sites" and
-    # "no duplicate content across sites". Self-contained on purpose — rather
-    # than require a reachable staging database (a secret this repo doesn't
-    # have configured), this spins up its own ephemeral Postgres, re-runs the
-    # same seed scripts local dev uses to populate it with the platform's
-    # actual known content, then scans that. cms/src/hooks/governanceCheck.ts
-    # enforces the same rules per-save in the admin UI; this job is the
-    # backstop for anything written via a script with `overrideAccess`, which
-    # bypasses hooks entirely.
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: italy_tours_ci
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.7.0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Seed known content
-        working-directory: cms
-        run: |
-          pnpm exec tsx src/seed/seed-templates.ts
-          pnpm exec tsx src/seed/seedStreetFoodRome.ts
-          pnpm exec tsx src/seed/seedInstagramOfferPage.ts
-          pnpm exec tsx src/seed/seedFoodMatchPage.ts
-      - name: Run governance scan
-        working-directory: cms
-        run: pnpm exec tsx src/seed/governanceScan.ts

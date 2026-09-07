@@ -10,8 +10,7 @@
  */
 import type { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
-import { getPayload } from 'payload';
-import config from '@italy-tours/cms/payload.config';
+import { findSiteByDomain, listPageDocs } from '@italy-tours/firebase';
 import { buildSitemapEntries } from '@italy-tours/seo';
 import { resolveLocalDevHostname } from '@italy-tours/config';
 
@@ -19,28 +18,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const headerList = await headers();
   const host = resolveLocalDevHostname(headerList.get('host')?.split(':')[0] ?? '');
 
-  const payload = await getPayload({ config });
-
-  const siteResult = await payload.find({
-    collection: 'sites',
-    where: { domain: { equals: host } },
-    limit: 1,
-    depth: 0,
-  });
-
-  const site = siteResult.docs[0];
+  const site = await findSiteByDomain(host);
   if (!site || site.status !== 'live') return [];
 
-  const pagesResult = await payload.find({
-    collection: 'pages',
-    where: { site: { equals: site.id } },
-    limit: 200,
-    depth: 0,
-  });
+  const pages = await listPageDocs(site.domain);
 
   const entries = buildSitemapEntries(
     { domain: site.domain, language: site.language },
-    pagesResult.docs.map((page) => ({
+    pages.map((page) => ({
       slug: page.slug,
       title: page.title,
       metaTitle: page.metaTitle,

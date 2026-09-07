@@ -1,5 +1,5 @@
 {
-  "name": "@italy-tours/governance",
+  "name": "@italy-tours/firebase",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -8,8 +8,13 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "dependencies": {
+    "@italy-tours/config": "workspace:*",
+    "firebase-admin": "^13.0.0"
+  },
   "devDependencies": {
     "@italy-tours/tsconfig": "workspace:*",
+    "@types/node": "^20.14.0",
     "typescript": "^5.5.4"
   }
 }

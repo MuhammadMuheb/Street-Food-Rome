@@ -1,10 +1,7 @@
 /**
  * apps/web/src/app/(site)/not-found.tsx — 404 boundary for the tenant-site
- * route tree. Needed for Next's build-time `/_not-found` page generation
- * (there are two sibling root layouts — (site) and (payload) — so a
- * top-level app/not-found.tsx has nowhere unambiguous to render into), and
- * rendered directly when `renderDispatch` calls `notFound()` for a slug with
- * no matching Page record on a resolved, live site.
+ * route tree, rendered directly when `renderDispatch` calls `notFound()`
+ * for a slug with no matching page doc on a resolved, live site.
  */
 import type { Metadata } from 'next';
 

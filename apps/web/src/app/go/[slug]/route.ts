@@ -22,9 +22,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
   }
 
   await logClickEvent({
-    siteId: site.id,
+    siteDomain: site.domain,
     slug,
-    tourId: resolution.tourId,
+    tourSlug: resolution.tourSlug,
     partner: resolution.partner,
     referrer: req.headers.get('referer'),
     userAgent: req.headers.get('user-agent'),

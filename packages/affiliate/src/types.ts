@@ -11,9 +11,9 @@ export interface PartnerConfig {
 }
 
 export interface ClickEventInput {
-  siteId: string;
+  siteDomain: string;
   slug: string;
-  tourId?: string;
+  tourSlug?: string;
   partner?: AffiliatePartnerKey;
   referrer?: string | null;
   userAgent?: string | null;

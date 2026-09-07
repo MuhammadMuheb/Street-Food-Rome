@@ -5,11 +5,12 @@
  * middleware there when the project uses a src/ directory (which this one
  * does, for src/app).
  *
- * Runs on the edge for every request, so it cannot talk to Postgres directly.
- * It normalizes the request hostname, resolves it against the cached
- * `/api/internal/resolve-site` route handler (which reads Payload's local API),
- * and stamps the result onto request headers + a `site-theme` cookie so the
- * App Router and shared UI primitives can render per-domain without knowing
+ * Runs on the edge for every request, so it cannot talk to Firestore directly
+ * (Firebase Admin SDK is Node-only). It normalizes the request hostname,
+ * resolves it against the cached `/api/internal/resolve-site` route handler
+ * (which reads Firestore via `@italy-tours/firebase`, Node runtime), and
+ * stamps the result onto request headers + a `site-theme` cookie so the App
+ * Router and shared UI primitives can render per-domain without knowing
  * anything about routing themselves.
  */
 import { NextRequest, NextResponse } from 'next/server';
@@ -47,27 +48,26 @@ export const config = {
 // this middleware.)
 
 const SITE_RESOLVER_PATH = '/api/internal/resolve-site';
-// Revalidated early via `afterChangePublishRevalidate`'s `revalidateTag(`site:${domain}`)` call.
+// Content is edited directly in the Firebase Console (no publish hook to
+// revalidate on write), so this TTL is the only cache invalidation path —
+// see fetchPageData.ts's comment for the same tradeoff on page reads.
 const SITE_CACHE_TTL_SECONDS = 300;
-// A hung DB connection inside resolve-site must not hang every single page
+// A hung Firestore read inside resolve-site must not hang every single page
 // request — bound the wait and fall through to "unresolved" instead.
 //
 // Longer in development on purpose: Next.js dev mode compiles each route on
-// its *first* request rather than ahead of time like a production build, and
-// this route's chain (resolve-site -> the full Payload config -> every
-// collection -> @italy-tours/governance, etc.) is large enough that a cold
-// compile can take longer than a short timeout. When that happens, every
-// single page request right after a fresh `next dev` start spuriously falls
-// through to "domain not configured" — indistinguishable from a real outage
-// to whoever's testing it, even though the underlying route would have
-// succeeded given a bit more time. 45s sounds generous, but a true cold
-// compile of this whole chain has been observed taking 45+ seconds on this
-// machine under load — this only ever costs real wall-clock time on the
-// very first request after a fresh `next dev` start (or after editing
-// middleware.ts itself); every request after that is fast because the route
-// is already compiled. Production builds are pre-compiled, so a
-// short timeout there is still correct — a genuinely hung DB connection
-// shouldn't hang every request.
+// its *first* request rather than ahead of time like a production build, so
+// a cold compile of this route's chain can take longer than a short
+// timeout. When that happens, every single page request right after a
+// fresh `next dev` start spuriously falls through to "domain not
+// configured" — indistinguishable from a real outage to whoever's testing
+// it, even though the underlying route would have succeeded given a bit
+// more time. This only ever costs real wall-clock time on the very first
+// request after a fresh `next dev` start (or after editing middleware.ts
+// itself); every request after that is fast because the route is already
+// compiled. Production builds are pre-compiled, so a short timeout there is
+// still correct — a genuinely hung Firestore read shouldn't hang every
+// request.
 const SITE_RESOLVE_TIMEOUT_MS = process.env.NODE_ENV === 'development' ? 45000 : 4000;
 // Not "/_unresolved-domain" — Next's App Router treats a leading "_" as a
 // private-folder marker and excludes that route from routing entirely.

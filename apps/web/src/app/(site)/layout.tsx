@@ -1,10 +1,10 @@
 /**
  * apps/web/src/app/(site)/layout.tsx — root layout for every tenant site.
  *
- * Lives inside the (site) route group, not directly under app/, because
- * Payload's admin panel (app/(payload)/layout.tsx) needs its own <html>/<body>
- * — Next.js only allows that via sibling route groups each acting as their
- * own root layout, with no shared layout.tsx directly in app/.
+ * Lives inside the (site) route group rather than directly under app/ —
+ * left over from when a sibling (payload) route group (the old Payload
+ * admin panel, since removed) needed its own separate <html>/<body> root
+ * layout. No functional reason to flatten this back now; harmless either way.
  *
  * Reads the `x-theme-tokens` header the middleware stamped onto this request
  * (see ../../middleware.ts) and injects it as inline CSS custom properties on

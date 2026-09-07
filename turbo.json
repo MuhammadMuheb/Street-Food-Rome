@@ -2,21 +2,16 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["infra/env/.env.example", "infra/env/.env"],
   "globalEnv": [
-    "DATABASE_URI",
-    "PAYLOAD_SECRET",
-    "NEXT_PUBLIC_SITE_URL",
+    "FIREBASE_PROJECT_ID",
+    "FIREBASE_CLIENT_EMAIL",
+    "FIREBASE_PRIVATE_KEY",
     "REVALIDATE_SECRET",
-    "OWNER_PASSWORD",
     "VERCEL_URL"
   ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
-    "@italy-tours/cms#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["src/payload-types.ts", "src/app/[(]payload[)]/admin/importMap.js"]
     },
     "dev": {
       "cache": false,

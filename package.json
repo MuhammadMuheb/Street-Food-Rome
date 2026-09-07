@@ -13,7 +13,6 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "cms:dev": "pnpm --filter @italy-tours/cms dev",
     "web:dev": "pnpm --filter @italy-tours/web dev"
   },
   "devDependencies": {

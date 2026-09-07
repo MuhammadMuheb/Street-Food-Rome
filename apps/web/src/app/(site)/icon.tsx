@@ -27,8 +27,7 @@
  */
 import { headers } from 'next/headers';
 import { ImageResponse } from 'next/og';
-import { getPayload } from 'payload';
-import config from '@italy-tours/cms/payload.config';
+import { findSiteByDomain } from '@italy-tours/firebase';
 import { DEFAULT_THEME_TOKENS, resolveLocalDevHostname } from '@italy-tours/config';
 
 export const size = { width: 32, height: 32 };
@@ -38,14 +37,7 @@ export default async function Icon() {
   const headerList = await headers();
   const host = resolveLocalDevHostname(headerList.get('host')?.split(':')[0] ?? '');
 
-  const payload = await getPayload({ config });
-  const siteResult = await payload.find({
-    collection: 'sites',
-    where: { domain: { equals: host } },
-    limit: 1,
-    depth: 0,
-  });
-  const site = siteResult.docs[0];
+  const site = await findSiteByDomain(host);
 
   if (site?.slug === 'streetfoodrome') {
     // The column glyph half of the header lockup (apps/web/src/sites/

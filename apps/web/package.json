@@ -11,14 +11,13 @@
   },
   "dependencies": {
     "@italy-tours/affiliate": "workspace:*",
-    "@italy-tours/cms": "workspace:*",
     "@italy-tours/config": "workspace:*",
+    "@italy-tours/firebase": "workspace:*",
     "@italy-tours/seo": "workspace:*",
     "@italy-tours/templates": "workspace:*",
     "@italy-tours/ui": "workspace:*",
+    "firebase-admin": "^13.0.0",
     "next": "15.4.11",
-    "payload": "^3.0.0",
-    "@payloadcms/next": "^3.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

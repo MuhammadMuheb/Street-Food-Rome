@@ -9,8 +9,8 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@italy-tours/cms": "workspace:*",
-    "payload": "^3.0.0"
+    "@italy-tours/config": "workspace:*",
+    "@italy-tours/firebase": "workspace:*"
   },
   "devDependencies": {
     "@italy-tours/tsconfig": "workspace:*",
