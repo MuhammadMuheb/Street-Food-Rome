@@ -11,23 +11,25 @@ interface NeighbourhoodBannerProps {
 
 export function NeighbourhoodBanner({ name, imageUrl, imageAlt, description, href }: NeighbourhoodBannerProps) {
   return (
-    <Link
-      href={href}
-      className="group relative flex h-72 items-end overflow-hidden rounded-2xl bg-ink"
-    >
+    <Link href={href} className="group relative flex h-56 items-end overflow-hidden rounded-2xl bg-ink sm:h-64">
       <Image
         src={imageUrl}
         alt={imageAlt}
         fill
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover opacity-80 transition-transform duration-500 group-hover:scale-105"
+        sizes="100vw"
+        className="object-cover opacity-85 transition-transform duration-500 group-hover:scale-105"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
-      <div className="relative w-full p-7">
-        <h3 className="font-display text-2xl font-semibold text-paper">{name}</h3>
-        <p className="mt-1.5 max-w-sm text-sm text-paper/75">{description}</p>
-        <span className="mt-4 inline-block rounded-full bg-paper px-4 py-2 text-xs font-semibold text-ink">
-          Read the guide
+      <div
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(to top, rgba(24,20,15,0.9) 0%, rgba(24,20,15,0.25) 60%, transparent 100%)' }}
+      />
+      <div className="relative flex w-full items-end justify-between p-6">
+        <div>
+          <h3 className="font-display text-2xl font-semibold text-paper sm:text-3xl">{name}</h3>
+          <p className="mt-1 max-w-sm text-sm text-paper/75">{description}</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-paper px-5 py-2.5 text-sm font-semibold text-ink">
+          View Tours
         </span>
       </div>
     </Link>

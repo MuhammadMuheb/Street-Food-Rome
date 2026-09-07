@@ -26,24 +26,46 @@ export function TourCard({ tour, guideHref, priority }: TourCardProps) {
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : null}
+        <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-paper/90 text-ink-muted">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M12 20s-7-4.35-9.5-8.8C.6 8 2 4.5 5.5 4c2-.28 3.7.7 4.5 2.3.8-1.6 2.5-2.58 4.5-2.3C18 4.5 19.4 8 17.5 11.2 15 15.65 12 20 12 20Z"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col p-5">
         <h3 className="font-display text-lg font-semibold leading-snug text-ink">{tour.title}</h3>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-medium text-ink-muted">
+        <div className="mt-2 flex items-center gap-2 text-xs font-medium text-ink-muted">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+            <path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
           {tour.duration ? <span>{tour.duration}</span> : null}
-          {tour.priceBand ? <span className="text-gold">{tour.priceBand}</span> : null}
+          <span className="text-line-strong">•</span>
           <span>{tour.city}</span>
         </div>
 
         {tour.firstHandNotes ? (
-          <p className="line-clamp-3 text-sm text-ink-muted">{tour.firstHandNotes}</p>
+          <p className="mt-3 line-clamp-2 text-sm text-ink-muted">{tour.firstHandNotes}</p>
         ) : null}
 
-        <span className="mt-auto pt-2 text-sm font-semibold text-accent group-hover:text-accent-hover">
-          Read the full guide →
-        </span>
+        <div className="mt-auto flex items-end justify-between pt-4">
+          <span className="text-sm font-semibold text-accent group-hover:text-accent-hover">
+            Read the full guide →
+          </span>
+          {tour.priceBand ? (
+            <span className="text-right">
+              <span className="block text-[11px] uppercase tracking-wide text-ink-muted">from</span>
+              <span className="font-display text-lg font-semibold text-ink">{tour.priceBand}</span>
+            </span>
+          ) : null}
+        </div>
       </div>
     </Link>
   );

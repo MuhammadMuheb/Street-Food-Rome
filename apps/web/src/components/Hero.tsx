@@ -17,7 +17,7 @@ const QUICK_LINKS = [
 export function Hero({ imageUrl }: HeroProps) {
   return (
     <section className="relative overflow-hidden bg-ink">
-      <div className="relative h-[600px] w-full sm:h-[660px]">
+      <div className="relative h-[520px] w-full sm:h-[560px]">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -32,27 +32,27 @@ export function Hero({ imageUrl }: HeroProps) {
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to top, rgba(24,20,15,0.95) 0%, rgba(24,20,15,0.8) 40%, rgba(24,20,15,0.6) 70%, rgba(24,20,15,0.5) 100%)',
+              'linear-gradient(to top, rgba(24,20,15,0.95) 0%, rgba(24,20,15,0.75) 45%, rgba(24,20,15,0.35) 100%)',
           }}
         />
 
         <div
-          className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-16"
+          className="relative mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-6 text-center"
           style={{ textShadow: '0 2px 20px rgba(24,20,15,0.55)' }}
         >
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-gold">
             Written by a 12-year Rome resident
           </p>
-          <h1 className="max-w-2xl font-display text-4xl font-semibold leading-[1.1] text-paper sm:text-5xl md:text-6xl">
+          <h1 className="font-display text-4xl font-semibold leading-[1.1] text-paper sm:text-5xl md:text-6xl">
             Rome&rsquo;s Street Food, Mapped by Someone Who Actually Eats It
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-paper/90">
-            No tourist-trap listicles. Every tour, market stall, and trattoria here has been
-            personally eaten at in the last year — most of them dozens of times.
+          <p className="mt-5 max-w-lg text-lg text-paper/90">
+            No tourist-trap listicles — every tour and market stall here has been personally
+            eaten at in the last year.
           </p>
 
-          <form action="/rome-street-food-tour" className="mt-8 flex max-w-xl">
-            <div className="flex w-full items-center gap-3 rounded-full bg-paper px-5 py-4 shadow-lg">
+          <form action="/rome-street-food-tour" className="mt-8 w-full max-w-md">
+            <div className="flex items-center gap-2 rounded-full bg-paper p-1.5 pl-5 shadow-lg">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0 text-ink-muted" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
                 <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -60,28 +60,33 @@ export function Hero({ imageUrl }: HeroProps) {
               <input
                 type="text"
                 name="q"
-                placeholder="Trastevere, Testaccio Market, Aperitivo…"
+                placeholder="Trastevere, Testaccio, Aperitivo…"
                 className="w-full bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
               />
               <button
                 type="submit"
-                className="shrink-0 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-accent-hover"
+                className="shrink-0 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-paper transition-colors hover:bg-accent-hover"
               >
-                Find a tour
+                Search Tours
               </button>
             </div>
           </form>
 
-          <div className="mt-5 flex flex-wrap gap-2.5">
+          <div className="mt-6 flex w-full items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {QUICK_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-full border border-paper/35 px-4 py-1.5 text-sm font-medium text-paper transition-colors hover:bg-paper hover:text-ink"
+                className="shrink-0 rounded-full border border-paper/35 px-4 py-1.5 text-sm font-medium text-paper transition-colors hover:bg-paper hover:text-ink"
               >
                 {link.label}
               </Link>
             ))}
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-paper/35 text-paper">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
         </div>
       </div>

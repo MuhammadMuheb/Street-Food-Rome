@@ -187,12 +187,12 @@ export default async function HomePage() {
             Where to Go, Tour by Tour
           </h2>
 
-          <div className="mt-10 space-y-10">
+          <div className="mt-10 space-y-16">
             {tours.map((tour) => {
               const meta = NEIGHBOURHOOD_META[tour.slug];
               if (!meta || !tour.imageUrl) return null;
               return (
-                <div key={tour.slug} className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+                <div key={tour.slug}>
                   <NeighbourhoodBanner
                     name={meta.name}
                     imageUrl={tour.imageUrl}
@@ -200,7 +200,9 @@ export default async function HomePage() {
                     description={meta.description}
                     href={TOUR_GUIDE_HREF[tour.slug] ?? '/'}
                   />
-                  <TourCard tour={tour} guideHref={TOUR_GUIDE_HREF[tour.slug] ?? '/'} />
+                  <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <TourCard tour={tour} guideHref={TOUR_GUIDE_HREF[tour.slug] ?? '/'} />
+                  </div>
                 </div>
               );
             })}
