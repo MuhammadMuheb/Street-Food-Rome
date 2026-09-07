@@ -1,28 +1,10 @@
 import Link from 'next/link';
 
-const NAV_LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/rome-street-food-tour', label: 'Food Tours' },
-  { href: '/best-neighbourhoods-for-food', label: 'Neighbourhoods' },
-  { href: '/rome-market-guide', label: 'Markets' },
-  { href: '/about', label: 'About' },
-];
-
 export function Header() {
   return (
-    <div className="sticky top-0 z-40">
-      {/* Slim utility bar */}
-      <div className="border-b border-line bg-paper">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-end gap-4 px-6 text-xs font-medium text-ink-muted">
-          <a href="mailto:hello@streetfoodrome.com" className="hover:text-ink">hello@streetfoodrome.com</a>
-          <span className="h-3 w-px bg-line-strong" aria-hidden="true" />
-          <Link href="/contact" className="hover:text-ink">Contact</Link>
-        </div>
-      </div>
-
-      {/* Main nav */}
-      <header className="bg-paper/95 backdrop-blur">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+        <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-paper">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -40,32 +22,39 @@ export function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-ink-muted transition-colors hover:text-ink"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
           <Link
-            href="#tours"
+            href="#"
             className="flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-accent-hover"
           >
-            See Tours
+            View Tours
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>
-      </header>
 
-      {/* Accent divider */}
-      <div className="h-[3px] bg-accent" />
-    </div>
+        <div className="flex items-center gap-5">
+          <button type="button" className="flex items-center gap-1.5 text-sm font-medium text-ink">
+            <span className="text-base leading-none">🇺🇸</span>
+            USD
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button type="button" aria-label="Account" className="text-ink-muted transition-colors hover:text-ink">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.6" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M4.5 20c0-4.1 3.4-6.8 7.5-6.8s7.5 2.7 7.5 6.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </button>
+          <button type="button" aria-label="Bag" className="text-ink-muted transition-colors hover:text-ink">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 8V6a5 5 0 0 1 10 0v2" stroke="currentColor" strokeWidth="1.6" />
+              <rect x="3.5" y="8" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
   );
 }
