@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* RGB channel triples (not hex/full-color strings) — required so Tailwind's
+     opacity-modifier syntax (e.g. text-paper/90) can wrap these as
+     rgb(var(--x) / <alpha>) in tailwind.config.ts. A hex literal here would
+     silently break every /NN opacity utility built on these tokens. */
+
+  /* Crisp near-white paper, not the warm-cream default — this site's warmth
+     comes from the wine-red/ochre accents, not a tinted background. */
+  --paper: 252 251 249;
+  /* Used sparingly for alternating section backgrounds only, never as the
+     dominant page color. */
+  --paper-tint: 244 239 231;
+  --ink: 24 20 15;
+  --ink-muted: 92 83 71;
+  /* Deep wine/oxblood red — Roman, specific, not a generic bright terracotta. */
+  --accent: 122 35 49;
+  --accent-hover: 94 26 37;
+  /* Roman ochre — parmesan rind, stucco facades, market produce. Secondary
+     accent only: ratings, tags, small highlights. Never the primary CTA color. */
+  --gold: 184 134 46;
+  --line: 230 221 208;
+  --line-strong: 211 198 178;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: rgb(var(--paper));
+  color: rgb(var(--ink));
+  font-family: var(--font-public-sans), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-feature-settings: 'ss01' 1;
+  text-wrap: balance;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
