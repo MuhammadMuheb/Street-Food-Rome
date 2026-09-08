@@ -7,7 +7,7 @@ const CATEGORIES = [
   {
     name: 'Pizza',
     ctaLabel: 'Explore Pizza Tours',
-    imageUrl: 'https://images.unsplash.com/photo-1598023696416-0193a0bcd302',
+    imageUrl: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca',
     slugs: [
       'pizza-al-taglio-suppli-tasting-tour',
       'trastevere-pizza-craft-beer-crawl',
@@ -27,7 +27,7 @@ const CATEGORIES = [
   {
     name: 'Beer & Wine',
     ctaLabel: 'Explore Experience',
-    imageUrl: 'https://images.unsplash.com/photo-1595489418349-353cc29e5bef',
+    imageUrl: 'https://images.unsplash.com/photo-1783443800128-8893eac948bb',
     slugs: ['rome-food-wine-tasting', 'monti-food-wine-evening', 'trastevere-food-wine-walk'],
   },
   {
