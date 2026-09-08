@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Fraunces, Public_Sans } from 'next/font/google';
+import { Fraunces, Playfair_Display, Public_Sans } from 'next/font/google';
 import { Header } from '@/components/Header';
 import './globals.css';
 
@@ -13,6 +13,15 @@ const fraunces = Fraunces({
 const publicSans = Public_Sans({
   subsets: ['latin'],
   variable: '--font-public-sans',
+  display: 'swap',
+});
+
+// Second serif, distinct from Fraunces — used only for the media-mentions
+// row so each masthead-style name reads as its own distinct publication,
+// not a uniform list.
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
   display: 'swap',
 });
 
@@ -38,7 +47,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${publicSans.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${publicSans.variable} ${playfairDisplay.variable}`}>
       <body className="flex min-h-screen flex-col bg-paper text-ink antialiased">
         <Header />
         <main className="flex-1">{children}</main>

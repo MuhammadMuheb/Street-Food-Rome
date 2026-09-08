@@ -4,41 +4,37 @@
  * so naming real, identifiable news organizations here would be a false
  * endorsement claim, not a design choice. Swap these for real mentions once
  * they exist.
+ *
+ * Each entry gets its own distinct typographic treatment (mixing two serif
+ * families, italics, weight, case and tracking) so the row reads like a set
+ * of real, individually-designed mastheads rather than one uniform list.
+ * Kept to 10 — enough for two clean rows without crowding.
  */
-const OUTLETS = [
-  'Rome Food Weekly',
-  'The Culinary Explorer',
-  'City Eats Magazine',
-  'Global Foodie Digest',
-  'Taste of Italy Review',
-  'Wanderlust Kitchen',
-  'The Local Table',
-  'Cucina & Culture',
-  "Eater's Almanac",
-  'Trattoria Times',
-  'The Roaming Fork',
-  'Italia Uncovered',
-  'Slow Food Chronicle',
-  'The Piazza Post',
+const OUTLETS: { name: string; className: string }[] = [
+  { name: 'Rome Food Weekly', className: 'font-display text-xl font-semibold' },
+  { name: 'The Culinary Explorer', className: 'font-playfair text-lg italic' },
+  { name: 'Global Foodie Digest', className: 'font-sans text-base font-extrabold' },
+  { name: 'Taste of Italy Review', className: 'font-display text-lg font-medium' },
+  { name: 'Wanderlust Kitchen', className: 'font-sans text-base font-bold lowercase tracking-tight' },
+  { name: 'The Local Table', className: 'font-display text-lg font-bold' },
+  { name: 'Trattoria Times', className: 'font-playfair text-lg font-bold italic' },
+  { name: 'The Roaming Fork', className: 'font-sans text-base font-extrabold italic' },
+  { name: 'Italia Uncovered', className: 'font-sans text-sm font-black uppercase tracking-wide' },
+  { name: 'Slow Food Chronicle', className: 'font-display text-lg italic' },
 ];
 
 export function MediaBar() {
   return (
-    <section className="border-t border-[#eef0f1] bg-white py-12">
+    <section className="bg-white py-16">
       <div className="mx-auto max-w-[1440px] px-14">
-        <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#b3b8bc]">
-          Read by Rome food lovers, planners &amp; fellow food writers
-        </p>
-
-        {/* Fixed 7-column grid — 14 items always wraps to exactly 2 rows,
-            regardless of viewport width or each name's text length. */}
-        <div className="mx-auto mt-7 grid max-w-[1280px] grid-cols-7 items-center justify-items-center gap-x-8 gap-y-5">
-          {OUTLETS.map((name) => (
+        {/* 5-column grid — 10 items sit in exactly 2 clean, evenly-spaced rows. */}
+        <div className="mx-auto grid max-w-[1200px] grid-cols-5 items-center justify-items-center gap-x-10 gap-y-10">
+          {OUTLETS.map((outlet) => (
             <span
-              key={name}
-              className="whitespace-nowrap font-sans text-sm font-medium tracking-wide text-[#9aa0a5] grayscale transition-colors hover:text-[#6b7075]"
+              key={outlet.name}
+              className={`whitespace-nowrap text-[#9aa0a5] grayscale transition-colors hover:text-[#5c6166] ${outlet.className}`}
             >
-              {name}
+              {outlet.name}
             </span>
           ))}
         </div>
