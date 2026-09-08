@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import type { TourDoc } from '@/lib/firestore';
+import { SafeImage } from './SafeImage';
 
 interface TourCardProps {
   tour: TourDoc;
@@ -12,7 +12,7 @@ export function TourCard({ tour, priority }: TourCardProps) {
     <Link href="#" className="group flex h-full flex-col">
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#f4f4f4]">
         {tour.imageUrl ? (
-          <Image
+          <SafeImage
             src={tour.imageUrl}
             alt={`${tour.title} — a Street Food Rome tour in ${tour.city}`}
             fill

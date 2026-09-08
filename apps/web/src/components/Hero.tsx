@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { SafeImage } from './SafeImage';
 
 interface HeroProps {
   imageUrl: string | null;
@@ -42,7 +42,7 @@ export function Hero({ imageUrl }: HeroProps) {
     <section>
       <div className="relative h-[340px] w-full sm:h-[420px]">
         {imageUrl ? (
-          <Image
+          <SafeImage
             src={imageUrl}
             alt="A small, authentic Roman trattoria with a handwritten specials board — Rome street food, not a generic Europe scene"
             fill

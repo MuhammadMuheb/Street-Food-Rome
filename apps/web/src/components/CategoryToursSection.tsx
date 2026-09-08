@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import type { TourDoc } from '@/lib/firestore';
+import { SafeImage } from './SafeImage';
 import { TourCard } from './TourCard';
 
 const CATEGORIES = [
@@ -52,7 +52,7 @@ function CategoryCard({ name, ctaLabel, imageUrl }: { name: string; ctaLabel: st
   return (
     <div className="relative col-span-1 overflow-hidden rounded-2xl sm:col-span-2 lg:col-span-1">
       <div className="relative aspect-[4/3] h-full min-h-[260px] overflow-hidden bg-[#f4f4f4] sm:min-h-[300px] lg:aspect-auto">
-        <Image
+        <SafeImage
           src={imageUrl}
           alt={`${name} in Rome`}
           fill
