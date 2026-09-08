@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
 import { Hero } from '@/components/Hero';
+import { TrustBar } from '@/components/TrustBar';
+import { MediaBar } from '@/components/MediaBar';
 
 export const revalidate = 3600;
 
@@ -18,5 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const page = await getPageDoc('home');
 
-  return <Hero imageUrl={page?.heroImageUrl ?? null} />;
+  return (
+    <>
+      <Hero imageUrl={page?.heroImageUrl ?? null} />
+      <TrustBar />
+      <MediaBar />
+    </>
+  );
 }
