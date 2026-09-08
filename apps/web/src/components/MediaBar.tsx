@@ -26,13 +26,15 @@ const OUTLETS: { name: string; className: string }[] = [
 export function MediaBar() {
   return (
     <section className="bg-white py-16">
-      <div className="mx-auto max-w-[1440px] px-14">
-        {/* 5-column grid — 10 items sit in exactly 2 clean, evenly-spaced rows. */}
-        <div className="mx-auto grid max-w-[1200px] grid-cols-5 items-center justify-items-center gap-x-10 gap-y-10">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-14">
+        {/* 5-column grid at desktop (10 items, 2 clean rows); fewer columns on
+            smaller screens so the whitespace-nowrap names never fight for
+            space and overlap. */}
+        <div className="mx-auto grid max-w-[1200px] grid-cols-2 items-center justify-items-center gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-x-8 lg:grid-cols-5 lg:gap-x-10 lg:gap-y-10">
           {OUTLETS.map((outlet) => (
             <span
               key={outlet.name}
-              className={`whitespace-nowrap text-[#9aa0a5] grayscale transition-colors hover:text-[#5c6166] ${outlet.className}`}
+              className={`text-center text-[#9aa0a5] grayscale transition-colors hover:text-[#5c6166] lg:whitespace-nowrap ${outlet.className}`}
             >
               {outlet.name}
             </span>

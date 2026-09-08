@@ -76,7 +76,7 @@ export function Hero({ imageUrl }: HeroProps) {
           />
           <button
             type="submit"
-            className="h-10 shrink-0 rounded-[6px] border border-[#f40051] px-2 text-base font-medium text-[#f40051]"
+            className="h-10 shrink-0 rounded-[6px] border border-[#ff0022] px-2 text-base font-medium text-[#ff0022]"
           >
             Search Tours
           </button>
@@ -90,7 +90,7 @@ export function Hero({ imageUrl }: HeroProps) {
             type="button"
             aria-label="Scroll categories left"
             onClick={() => scrollBy(-320)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] bg-white text-[#2b2e2f] transition-colors hover:bg-[#f9fafa]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] bg-white text-[#9aa0a5] transition-colors hover:border-[#ff0022] hover:text-[#ff0022]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m15 5-7 7 7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -105,7 +105,7 @@ export function Hero({ imageUrl }: HeroProps) {
               <Link
                 key={chip}
                 href="#"
-                className="flex h-[42px] shrink-0 items-center whitespace-nowrap rounded-lg border border-[#e8ebed] bg-white px-3 text-base font-bold text-[#f40051]"
+                className="flex h-[42px] shrink-0 items-center whitespace-nowrap rounded-lg border border-[#e8ebed] bg-white px-3 text-base font-bold text-[#ff0022]"
               >
                 {chip}
               </Link>
@@ -116,7 +116,7 @@ export function Hero({ imageUrl }: HeroProps) {
             type="button"
             aria-label="Scroll categories right"
             onClick={() => scrollBy(320)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] bg-white text-[#2b2e2f] transition-colors hover:bg-[#f9fafa]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] bg-white text-[#9aa0a5] transition-colors hover:border-[#ff0022] hover:text-[#ff0022]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />

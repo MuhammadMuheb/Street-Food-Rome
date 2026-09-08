@@ -1,12 +1,43 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 export function Header() {
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    function onScroll() {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      if (currentY < 80) {
+        setHidden(false);
+      } else if (delta > 4) {
+        setHidden(true);
+      } else if (delta < -4) {
+        setHidden(false);
+      }
+      lastScrollY.current = currentY;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 h-[65px] border-b border-[#e8ebed] bg-white">
-      <div className="mx-auto flex h-full max-w-[1920px] items-center justify-between px-6">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ff0022] text-white">
+    <header
+      className={`sticky top-0 z-40 h-[65px] border-b border-[#e8ebed] bg-white ${
+        hidden ? '-translate-y-full transition-transform duration-300 ease-in-out' : 'translate-y-0'
+      }`}
+    >
+      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-2 px-6 sm:px-14">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-4">
+          <Link href="/" className="flex shrink-0 items-center gap-2">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ff0022] text-white">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M6 3v7a2 2 0 0 0 2 2v9M6 3a2 2 0 0 0-2 2M6 3a2 2 0 0 1 2 2v5M18 3c-1.6 0-3 2-3 6s1.4 5 3 5v7"
@@ -17,22 +48,27 @@ export function Header() {
                 />
               </svg>
             </span>
-            <span className="text-lg font-bold tracking-tight text-[#1a1a1a]">street food rome</span>
+            <span className="whitespace-nowrap text-base font-bold tracking-tight text-[#1a1a1a] sm:text-lg">
+              street food rome
+            </span>
           </Link>
 
           <Link
             href="#"
-            className="flex h-10 items-center gap-1.5 rounded-[6px] bg-[#ff0022] px-4 text-base font-bold text-white"
+            className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] bg-[#ff0022] px-3 text-sm font-bold text-white sm:h-10 sm:px-4 sm:text-base"
           >
             View Tours
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="hidden sm:block">
               <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>
 
-        <div className="flex items-center gap-5">
-          <button type="button" className="flex items-center gap-1.5 text-base font-medium text-[#2b2e2f]">
+        <div className="flex shrink-0 items-center gap-3 sm:gap-5">
+          <button
+            type="button"
+            className="hidden items-center gap-1.5 text-base font-medium text-[#2b2e2f] sm:flex"
+          >
             <span className="text-base leading-none">🇺🇸</span>
             USD
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">

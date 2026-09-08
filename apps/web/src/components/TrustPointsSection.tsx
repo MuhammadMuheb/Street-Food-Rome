@@ -45,11 +45,11 @@ const POINTS = [
   },
 ];
 
-export function TrustBar() {
+export function TrustPointsSection() {
   return (
-    <section className="bg-[#f9fafa] py-16">
-      <div className="mx-auto max-w-[1440px] px-14">
-        <h2 className="text-center font-sans text-2xl font-bold tracking-tight text-[#3b3e3f] sm:text-[28px]">
+    <section className="bg-[#f9fafa] py-12">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-14">
+        <h2 className="text-center font-sans text-xl font-bold tracking-tight text-[#1a1a1a] sm:text-2xl">
           Why Book Rome Food Tours With Us?
         </h2>
 

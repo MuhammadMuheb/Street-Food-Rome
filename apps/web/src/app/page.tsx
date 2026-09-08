@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { getAllTours, getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
 import { Hero } from '@/components/Hero';
-import { TrustBar } from '@/components/TrustBar';
+import { TrustPointsSection } from '@/components/TrustPointsSection';
 import { MediaBar } from '@/components/MediaBar';
 import { TourCarouselSection } from '@/components/TourCarouselSection';
+import { CategoryToursSection } from '@/components/CategoryToursSection';
+import { ExploreLinksSection } from '@/components/ExploreLinksSection';
+import { AllDestinationsSection } from '@/components/AllDestinationsSection';
 
 export const revalidate = 3600;
 
@@ -24,9 +27,12 @@ export default async function HomePage() {
   return (
     <>
       <Hero imageUrl={page?.heroImageUrl ?? null} />
-      <TrustBar />
+      <TrustPointsSection />
       <MediaBar />
       <TourCarouselSection tours={tours} />
+      <CategoryToursSection tours={tours} />
+      <ExploreLinksSection tours={tours} />
+      <AllDestinationsSection />
     </>
   );
 }
