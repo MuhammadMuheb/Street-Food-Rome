@@ -53,35 +53,39 @@ export function Hero({ imageUrl }: HeroProps) {
         ) : null}
         <div className="absolute inset-0 bg-black/35" />
 
-        <div className="relative mx-auto flex h-full max-w-[896px] flex-col justify-center px-6">
+        <div className="relative mx-auto flex h-full max-w-[896px] flex-col justify-center px-6 pb-8">
           <h1 className="font-sans text-[40px] font-extrabold leading-[1.15] text-white sm:text-[56px] sm:leading-[72px]">
             Rome&rsquo;s Ultimate Street Food &amp; Culinary Experiences
           </h1>
-
-          <form action="#" className="mt-8 flex items-center gap-2 rounded-2xl bg-white p-2 shadow-[0_8px_48px_rgba(45,51,57,0.16)]">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="ml-3 shrink-0 text-[#6b7280]" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
-              <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            </svg>
-            <input
-              type="text"
-              name="q"
-              placeholder="Trastevere, Testaccio, Suppli, Pizza al Taglio…."
-              className="h-10 w-full bg-transparent text-base text-[#1a1a1a] placeholder:text-[#6b7280] focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="h-10 shrink-0 rounded-[6px] border border-[#f40051] px-2 text-base font-medium text-[#f40051]"
-            >
-              Search Tours
-            </button>
-          </form>
         </div>
+      </div>
+
+      {/* Search bar straddles the hero/strip boundary — half over the photo, half over the light
+          section below — matching the reference's actual overlap, not fully embedded in the photo. */}
+      <div className="relative z-10 mx-auto -mt-[29px] max-w-[896px] px-6">
+        <form action="#" className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-[0_8px_48px_rgba(45,51,57,0.16)]">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="ml-3 shrink-0 text-[#6b7280]" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
+            <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          <input
+            type="text"
+            name="q"
+            placeholder="Trastevere, Testaccio, Suppli, Pizza al Taglio…."
+            className="h-10 w-full bg-transparent text-base text-[#1a1a1a] placeholder:text-[#6b7280] focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="h-10 shrink-0 rounded-[6px] border border-[#f40051] px-2 text-base font-medium text-[#f40051]"
+          >
+            Search Tours
+          </button>
+        </form>
       </div>
 
       {/* Category chips — separate light strip below the photo, functional scroll like the reference */}
       <div className="bg-[#f9fafa]">
-        <div className="mx-auto flex max-w-[1200px] items-center gap-2 px-6 py-6">
+        <div className="mx-auto flex max-w-[1200px] items-center gap-2 px-6 pb-6 pt-10">
           <button
             type="button"
             aria-label="Scroll categories left"
