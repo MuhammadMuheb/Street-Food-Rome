@@ -12,16 +12,21 @@ const OUTLETS = [
   'Global Foodie Digest',
   'Taste of Italy Review',
   'Wanderlust Kitchen Journal',
+  'The Local Table',
+  'Cucina & Culture',
+  "Eater's Almanac",
+  'Trattoria Times',
+  'The Roaming Fork',
+  'Italia Uncovered',
+  'Slow Food Chronicle',
+  'The Piazza Post',
 ];
 
 export function MediaBar() {
   return (
-    <section className="border-b border-[#e8ebed] bg-white py-12">
-      <div className="mx-auto max-w-[1200px] px-6">
-        <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#9aa0a6]">
-          Read by Rome food lovers, planners, and fellow food writers
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+    <section className="bg-white py-6">
+      <div className="mx-auto max-w-[1440px] px-14">
+        <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-6">
           {OUTLETS.map((name) => (
             <span key={name} className="font-display text-lg text-[#8a9096] grayscale">
               {name}

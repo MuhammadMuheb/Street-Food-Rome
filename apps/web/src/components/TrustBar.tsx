@@ -47,23 +47,23 @@ const POINTS = [
 
 export function TrustBar() {
   return (
-    <section className="border-b border-[#e8ebed] bg-[#f9fafa]">
-      <div className="mx-auto max-w-[1200px] px-6 py-16">
-        <h2 className="text-center font-display text-2xl font-bold text-[#1a1a1a] sm:text-3xl">
+    <section className="bg-white py-6">
+      <div className="mx-auto max-w-[1440px] px-14">
+        <h2 className="text-center text-[30px] font-extrabold text-[#3b3e3f]">
           Why Book Rome Food Tours With Us?
         </h2>
 
-        <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto mt-6 grid max-w-[1312px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[316px_316px_316px_316px]">
           {POINTS.map((point) => (
-            <div key={point.label} className="flex items-start gap-3.5">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#fdeaec] text-[#f40051]">
+            <div key={point.label} className="flex items-start gap-4">
+              <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-[rgba(237,56,54,0.12)] text-[rgb(197,48,48)]">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   {point.icon}
                 </svg>
               </span>
               <div>
-                <h3 className="text-base font-bold leading-tight text-[#1a1a1a]">{point.label}</h3>
-                <p className="mt-1.5 text-sm leading-snug text-[#5c5f61]">{point.body}</p>
+                <h3 className="text-xl font-bold text-[rgb(30,30,30)]">{point.label}</h3>
+                <p className="text-base leading-[26px] text-[rgb(117,124,127)]">{point.body}</p>
               </div>
             </div>
           ))}
