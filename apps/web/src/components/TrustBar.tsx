@@ -47,23 +47,25 @@ const POINTS = [
 
 export function TrustBar() {
   return (
-    <section className="bg-white py-6">
+    <section className="bg-white py-16">
       <div className="mx-auto max-w-[1440px] px-14">
-        <h2 className="text-center text-[30px] font-extrabold text-[#3b3e3f]">
+        <h2 className="text-center font-sans text-2xl font-bold tracking-tight text-[#3b3e3f] sm:text-[28px]">
           Why Book Rome Food Tours With Us?
         </h2>
 
-        <div className="mx-auto mt-6 grid max-w-[1312px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[316px_316px_316px_316px]">
+        <div className="mx-auto mt-10 grid max-w-[1312px] grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
           {POINTS.map((point) => (
-            <div key={point.label} className="flex items-start gap-4">
-              <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-[rgba(237,56,54,0.12)] text-[rgb(197,48,48)]">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <div key={point.label} className="flex items-start gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(237,56,54,0.08)] text-[rgb(197,48,48)]">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   {point.icon}
                 </svg>
               </span>
               <div>
-                <h3 className="text-xl font-bold text-[rgb(30,30,30)]">{point.label}</h3>
-                <p className="text-base leading-[26px] text-[rgb(117,124,127)]">{point.body}</p>
+                <h3 className="font-sans text-[15px] font-semibold leading-snug text-[rgb(30,30,30)]">
+                  {point.label}
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed text-[rgb(117,124,127)]">{point.body}</p>
               </div>
             </div>
           ))}

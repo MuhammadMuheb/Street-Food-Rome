@@ -6,12 +6,12 @@
  * they exist.
  */
 const OUTLETS = [
-  'Rome Food & Travel Weekly',
+  'Rome Food Weekly',
   'The Culinary Explorer',
   'City Eats Magazine',
   'Global Foodie Digest',
   'Taste of Italy Review',
-  'Wanderlust Kitchen Journal',
+  'Wanderlust Kitchen',
   'The Local Table',
   'Cucina & Culture',
   "Eater's Almanac",
@@ -24,11 +24,20 @@ const OUTLETS = [
 
 export function MediaBar() {
   return (
-    <section className="bg-white py-6">
+    <section className="border-t border-[#eef0f1] bg-white py-12">
       <div className="mx-auto max-w-[1440px] px-14">
-        <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-6">
+        <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#b3b8bc]">
+          Read by Rome food lovers, planners &amp; fellow food writers
+        </p>
+
+        {/* Fixed 7-column grid — 14 items always wraps to exactly 2 rows,
+            regardless of viewport width or each name's text length. */}
+        <div className="mx-auto mt-7 grid max-w-[1280px] grid-cols-7 items-center justify-items-center gap-x-8 gap-y-5">
           {OUTLETS.map((name) => (
-            <span key={name} className="font-display text-lg text-[#8a9096] grayscale">
+            <span
+              key={name}
+              className="whitespace-nowrap font-sans text-sm font-medium tracking-wide text-[#9aa0a5] grayscale transition-colors hover:text-[#6b7075]"
+            >
               {name}
             </span>
           ))}
