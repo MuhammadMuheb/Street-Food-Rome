@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
+import { getAllTours, getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
 import { Hero } from '@/components/Hero';
 import { TrustBar } from '@/components/TrustBar';
 import { MediaBar } from '@/components/MediaBar';
+import { TourCarouselSection } from '@/components/TourCarouselSection';
 
 export const revalidate = 3600;
 
@@ -18,13 +19,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const page = await getPageDoc('home');
+  const [page, tours] = await Promise.all([getPageDoc('home'), getAllTours()]);
 
   return (
     <>
       <Hero imageUrl={page?.heroImageUrl ?? null} />
       <TrustBar />
       <MediaBar />
+      <TourCarouselSection tours={tours} />
     </>
   );
 }
