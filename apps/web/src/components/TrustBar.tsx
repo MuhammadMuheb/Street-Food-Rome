@@ -47,15 +47,18 @@ const POINTS = [
 
 export function TrustBar() {
   return (
-    <section className="bg-white py-16">
+    <section className="bg-[#f9fafa] py-16">
       <div className="mx-auto max-w-[1440px] px-14">
         <h2 className="text-center font-sans text-2xl font-bold tracking-tight text-[#3b3e3f] sm:text-[28px]">
           Why Book Rome Food Tours With Us?
         </h2>
 
-        <div className="mx-auto mt-10 grid max-w-[1312px] grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto mt-10 grid max-w-[1312px] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {POINTS.map((point) => (
-            <div key={point.label} className="flex items-start gap-3.5">
+            <div
+              key={point.label}
+              className="flex items-start gap-3.5 rounded-2xl bg-white p-6 shadow-[0_2px_12px_rgba(45,51,57,0.06)]"
+            >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(237,56,54,0.08)] text-[rgb(197,48,48)]">
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   {point.icon}
