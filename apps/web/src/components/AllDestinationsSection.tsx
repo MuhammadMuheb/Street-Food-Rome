@@ -1,46 +1,14 @@
 import Link from 'next/link';
 
 const DESTINATIONS = [
-  'Amalfi Coast',
-  'Amsterdam',
-  'Athens',
-  'Bangkok',
-  'Barcelona',
-  'Berlin',
-  'Bologna',
-  'Budapest',
-  'Cinque Terre',
-  'Copenhagen',
-  'Dubai',
-  'Dublin',
-  'Edinburgh',
-  'Florence',
-  'Geneva',
-  'Istanbul',
-  'Lisbon',
-  'London',
-  'Madrid',
-  'Milan',
-  'Munich',
-  'Naples',
-  'New York',
-  'Nice',
-  'Paris',
-  'Positano',
-  'Prague',
-  'Reykjavik',
-  'Rome',
-  'Santorini',
-  'Seville',
-  'Sicily',
-  'Singapore',
-  'Sorrento',
-  'Stockholm',
-  'Tokyo',
-  'Tuscany',
-  'Venice',
-  'Vienna',
-  'Zurich',
+  'Trastevere',
+  'Testaccio',
+  'Jewish Ghetto',
+  "Campo de' Fiori",
+  'Monti',
+  'Prati',
+  'San Lorenzo',
+  'Pigneto',
 ];
 
 export function AllDestinationsSection() {
@@ -54,7 +22,7 @@ export function AllDestinationsSection() {
           <p className="mt-2 text-base text-[#9aa0a5]">A world of possibilities!</p>
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-[1200px] grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        <div className="mx-auto mt-10 grid max-w-[720px] grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4">
           {DESTINATIONS.map((name) => (
             <Link
               key={name}
