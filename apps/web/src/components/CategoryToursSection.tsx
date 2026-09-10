@@ -84,7 +84,7 @@ export function CategoryToursSection({ tours }: { tours: TourDoc[] }) {
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9aa0a5]">
             Things you must taste in Rome
           </p>
-          <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[#1a1a1a] sm:text-4xl">
+          <h2 className="mt-2 font-sans text-3xl font-extrabold tracking-tight text-[#1a1a1a] sm:text-4xl">
             Top Food Items to Try in Rome
           </h2>
         </div>

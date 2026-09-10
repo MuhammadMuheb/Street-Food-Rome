@@ -76,6 +76,17 @@ export interface AuthorDoc {
   avatarUrl: string | null;
 }
 
+export interface BlogPostDoc {
+  slug: string;
+  title: string;
+  excerpt: string;
+  bodyHtml: string;
+  coverImageUrl: string | null;
+  publishedAt: string;
+  metaTitle: string;
+  metaDesc: string;
+}
+
 export async function getAllTours(): Promise<TourDoc[]> {
   const snap = await getDb().collection('tours').get();
   return snap.docs.map((doc) => doc.data() as TourDoc);
@@ -99,4 +110,14 @@ export async function listPageDocs(): Promise<PageDoc[]> {
 export async function getAuthor(id: string): Promise<AuthorDoc | null> {
   const snap = await getDb().collection('authors').doc(id).get();
   return snap.exists ? (snap.data() as AuthorDoc) : null;
+}
+
+export async function getAllBlogPosts(): Promise<BlogPostDoc[]> {
+  const snap = await getDb().collection('blogPosts').orderBy('publishedAt', 'desc').get();
+  return snap.docs.map((doc) => doc.data() as BlogPostDoc);
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPostDoc | null> {
+  const snap = await getDb().collection('blogPosts').doc(slug).get();
+  return snap.exists ? (snap.data() as BlogPostDoc) : null;
 }

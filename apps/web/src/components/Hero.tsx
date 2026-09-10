@@ -83,8 +83,11 @@ export function Hero({ imageUrl }: HeroProps) {
         </form>
       </div>
 
-      {/* Category chips — separate light strip below the photo, functional scroll like the reference */}
-      <div className="bg-[#f9fafa]">
+      {/* Category chips — separate strip below the photo, functional scroll like the reference.
+          White, not the light-gray tint used elsewhere: the section right below (Trust Points)
+          is already that gray, and two identical backgrounds back-to-back read as one seamless
+          block with no boundary between them. */}
+      <div className="bg-white">
         <div className="mx-auto flex max-w-[1200px] items-center gap-2 px-6 pb-6 pt-10">
           <button
             type="button"

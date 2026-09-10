@@ -49,7 +49,7 @@ export function TrustPointsSection() {
   return (
     <section className="bg-[#f9fafa] py-12">
       <div className="mx-auto max-w-[1440px] px-6 sm:px-14">
-        <h2 className="text-center font-sans text-xl font-bold tracking-tight text-[#1a1a1a] sm:text-2xl">
+        <h2 className="text-center font-sans text-xl font-extrabold tracking-tight text-[#1a1a1a] sm:text-2xl">
           Why Book Rome Food Tours With Us?
         </h2>
 

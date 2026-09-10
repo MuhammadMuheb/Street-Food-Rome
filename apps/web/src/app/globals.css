@@ -48,3 +48,57 @@ h3,
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+/* Shared typography for Firestore-authored bodyHtml (legal pages, blog
+   posts) — kept separate from Tailwind's utility classes since the markup
+   comes from stored HTML, not JSX we control node-by-node. */
+.rich-content > * + * {
+  margin-top: 1.25em;
+}
+
+.rich-content h2 {
+  font-family: var(--font-public-sans), system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+
+.rich-content h3 {
+  font-family: var(--font-public-sans), system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+
+.rich-content p,
+.rich-content li {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #5c6166;
+}
+
+.rich-content ul,
+.rich-content ol {
+  padding-left: 1.25em;
+}
+
+.rich-content ul {
+  list-style: disc;
+}
+
+.rich-content ol {
+  list-style: decimal;
+}
+
+.rich-content a {
+  color: #ff0022;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-content strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}

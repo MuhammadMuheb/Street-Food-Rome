@@ -2,7 +2,9 @@ import Link from 'next/link';
 
 const COMPANY_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'About', href: '#' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Blog', href: '/blog' },
   { label: 'Rome Food Tours', href: '#' },
   { label: 'Top Attractions', href: '#' },
   { label: 'All Destinations', href: '#' },
@@ -20,10 +22,11 @@ const DESTINATION_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { label: 'Privacy Policy', href: '#' },
-  { label: 'Terms of Service', href: '#' },
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
   { label: 'Cookie Policy', href: '#' },
   { label: 'Affiliate Disclosure', href: '#' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const SOCIAL_LINKS = [
