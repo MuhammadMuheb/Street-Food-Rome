@@ -1,0 +1,458 @@
+'use client';
+
+import Link from '@/components/NetworkLink';
+import { SafeImage } from '@/components/SafeImage';
+import {
+  ARENA_FLOOR_PAGE,
+  FAQS,
+  FEATURED_TOURS,
+  HERO_IMAGE,
+  MONEY_PAGES,
+  QUICK_LINKS,
+  SUPPORT_PAGES,
+  WORTH_IT_PAGE,
+} from '@/lib/underground-colosseum';
+import { CarouselArrows, RibbonBadge, UCAuthorBox, UCFooter, UCHeader, useCardCarousel } from '@/components/underground-colosseum/UCShared';
+
+/**
+ * Homepage for the Underground Colosseum hero property (undergroundcolosseum.com,
+ * served here at /underground-colosseum as the platform's active test route).
+ * Renders with no platform Header/Footer (both self-hide via
+ * isUnbuiltNetworkRoute) — it uses its own UCHeader/UCFooter (shared with
+ * every other page on this property, see components/underground-colosseum/
+ * UCShared.tsx) — but every color/type/spacing choice deliberately reuses
+ * Street Food Rome's exact design language (see Header.tsx, Hero.tsx,
+ * TourCard.tsx, Footer.tsx) rather than a bespoke palette, so the two
+ * properties read as the same platform.
+ *
+ * Built off the site's wireframe: hero -> quick-jump chips -> 5 money-page
+ * cards -> featured tours -> validation teasers -> 6 support-page cards ->
+ * FAQ -> author box -> footer. The two tour-card grids are client-side
+ * carousels (scroll-snap track + looping prev/next arrows), the same
+ * pattern as the platform's own TourCarouselSection.tsx — hence 'use client'
+ * at the top of an otherwise static page.
+ */
+
+/**
+ * "Choose Your Colosseum Tour" — the 5 money pages, as a carousel track
+ * instead of a fixed grid (matches the platform's TourCarouselSection
+ * pattern; still exactly 5 cards, since those are 5 fixed distinct SEO
+ * pages per the site blueprint — this only changes how they're browsed).
+ */
+function MoneyPagesCarousel() {
+  const { trackRef, scrollByOneCard } = useCardCarousel();
+
+  return (
+    <section id="tours" className="scroll-mt-[65px] border-b border-[#e8ebed] py-16 sm:py-20">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-14">
+        <div className="flex flex-wrap items-end justify-between gap-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">The 5 ways to book</p>
+            <h2 className="mt-2 font-sans text-[28px] font-extrabold leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-[36px]">
+              Choose Your Colosseum Tour
+            </h2>
+          </div>
+          <CarouselArrows label="tour page" onPrev={() => scrollByOneCard(-1)} onNext={() => scrollByOneCard(1)} />
+        </div>
+        <p className="mt-3 max-w-[62ch] text-[15.5px] leading-relaxed text-[#5c6166]">
+          Every card below is its own page with its own primary keyword — no two share intent, so each can rank on
+          its own.
+        </p>
+
+        <div
+          ref={trackRef}
+          className="mt-8 grid auto-cols-[calc(100%-2.5rem)] grid-flow-col gap-6 overflow-x-auto scroll-smooth [scrollbar-width:none] sm:auto-cols-[calc((100%-1.5rem)/2)] lg:auto-cols-[calc((100%-3*1.5rem)/4)] [&::-webkit-scrollbar]:hidden"
+          style={{ scrollSnapType: 'x mandatory' }}
+        >
+          {MONEY_PAGES.map((page) => (
+            <Link
+              key={page.href}
+              href={page.href}
+              style={{ scrollSnapAlign: 'start' }}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-[#e8ebed] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#e8ebed] hover:shadow-[0_16px_32px_rgba(26,26,26,0.08)]"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#f4f4f4]">
+                <SafeImage
+                  src={page.image.src}
+                  alt={page.image.alt}
+                  fill
+                  sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                {page.badge ? <RibbonBadge label={page.badge} /> : null}
+              </div>
+              <div className="flex flex-1 flex-col p-4">
+                <h3 className="font-sans text-[17px] font-bold leading-snug text-[#1a1a1a]">{page.title}</h3>
+                <p className="mt-2 flex-1 text-[14.5px] leading-relaxed text-[#5c6166]">{page.blurb}</p>
+                <span className="mt-3 inline-block w-fit rounded-full bg-[#f4f4f4] px-2.5 py-1 text-xs font-semibold text-[#5c6166]">
+                  {page.keyword}
+                </span>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[#ff0022]">
+                  {page.cta}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * "Featured Tours" — 8 diverse bookable listings across all three partners,
+ * as a carousel showing 4 cards at once on desktop (2 tablet, 1 mobile),
+ * with looping prev/next arrows.
+ */
+function FeaturedToursCarousel() {
+  const { trackRef, scrollByOneCard } = useCardCarousel();
+
+  return (
+    <section id="featured-tours" className="scroll-mt-[65px] border-b border-[#e8ebed] bg-[#f9fafa] py-16 sm:py-20">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-14">
+        <div className="flex flex-wrap items-end justify-between gap-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">Live tour comparison</p>
+            <h2 className="mt-2 font-sans text-[28px] font-extrabold leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-[36px]">
+              Featured Tours
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="hidden rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#5c6166] sm:inline-block">
+              €50 – €110 price band
+            </span>
+            <CarouselArrows label="tour" onPrev={() => scrollByOneCard(-1)} onNext={() => scrollByOneCard(1)} />
+          </div>
+        </div>
+        <p className="mt-3 max-w-[62ch] text-[15.5px] leading-relaxed text-[#5c6166]">
+          Every card pulls partner, price band, and duration live from the Tour collection.
+        </p>
+        <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-[#b8862e]">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          Underground slots are capped daily — official releases often sell out within minutes.
+        </p>
+
+        <div
+          ref={trackRef}
+          className="mt-8 grid auto-cols-[calc(100%-2.5rem)] grid-flow-col gap-6 overflow-x-auto scroll-smooth [scrollbar-width:none] sm:auto-cols-[calc((100%-1.5rem)/2)] lg:auto-cols-[calc((100%-3*1.5rem)/4)] [&::-webkit-scrollbar]:hidden"
+          style={{ scrollSnapType: 'x mandatory' }}
+        >
+          {FEATURED_TOURS.map((tour) => (
+            <div
+              key={tour.slug}
+              style={{ scrollSnapAlign: 'start' }}
+              className="flex flex-col overflow-hidden rounded-2xl border border-[#e8ebed] bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(26,26,26,0.08)]"
+            >
+              <div className="relative aspect-[4/3] bg-[#f4f4f4]">
+                <SafeImage
+                  src={tour.image.src}
+                  alt={tour.image.alt}
+                  fill
+                  sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw"
+                  className="object-cover"
+                />
+                {tour.badge ? <RibbonBadge label={tour.badge} /> : null}
+              </div>
+              <div className="flex flex-1 flex-col p-4">
+                <span className="w-fit rounded-full bg-[#f4f4f4] px-2.5 py-1 text-xs font-semibold text-[#5c6166]">
+                  {tour.partner}
+                </span>
+                <h3 className="mt-3 font-sans text-[17px] font-bold leading-snug text-[#1a1a1a]">{tour.title}</h3>
+                <p className="mt-1.5 text-sm text-[#5c6166]">{tour.meta}</p>
+                <div className="mt-4 flex items-end justify-between">
+                  <span className="font-sans text-2xl font-bold text-[#1a1a1a]">from &euro;{tour.priceFrom}</span>
+                  <Link href={`/go/${tour.slug}`} className="text-sm font-bold text-[#ff0022] hover:underline">
+                    View tour &rarr;
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function UndergroundColosseumHome() {
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+
+  const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: MONEY_PAGES.map((page, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: page.title,
+      url: `https://undergroundcolosseum.com${page.href}`,
+    })),
+  };
+
+  return (
+    <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
+
+      <UCHeader />
+
+      {/* ---------- hero ---------- */}
+      <section className="border-b border-[#e8ebed]">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-6 py-14 sm:px-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-20">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9aa0a5]">
+              Colosseum underground tour
+            </p>
+            <h1 className="mt-4 font-sans text-[38px] font-extrabold leading-[1.08] tracking-tight text-[#1a1a1a] sm:text-[54px]">
+              Underground &amp; Arena Floor Colosseum Tours
+            </h1>
+            <p className="mt-5 max-w-[52ch] text-[17px] leading-relaxed text-[#5c6166]">
+              Written and photographed on-site by a Rome-based guide who has walked every underground circuit in
+              person — so you know exactly what each tour actually includes before you book.
+            </p>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/underground-arena-floor-tour"
+                className="flex h-11 items-center justify-center rounded-[6px] bg-[#ff0022] px-6 text-sm font-bold text-white transition-colors hover:bg-[#e0001d]"
+              >
+                Compare Underground Tours
+              </Link>
+              <Link
+                href="/is-the-underground-worth-it"
+                className="flex h-11 items-center justify-center rounded-[6px] border border-[#ff0022] px-6 text-sm font-medium text-[#ff0022] transition-colors hover:bg-[rgba(237,56,54,0.08)]"
+              >
+                Is it worth it?
+              </Link>
+            </div>
+
+            <div className="mt-8 flex flex-col gap-2.5 text-sm text-[#5c6166] sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
+              {['Own arena-floor photography', 'Independent — no operator affiliation', 'Compares GetYourGuide · Viator · Tiqets'].map((label) => (
+                <span key={label} className="flex items-center gap-1.5">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0 text-[#4c8c4a]">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
+                    <path d="m8 12.5 2.5 2.5L16 9.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#f4f4f4]">
+            <SafeImage
+              src={HERO_IMAGE.src}
+              alt={HERO_IMAGE.alt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- quick-jump topic chips ---------- */}
+      <div className="border-b border-[#e8ebed] bg-white">
+        <div className="mx-auto flex max-w-[1200px] items-center gap-2 overflow-x-auto px-6 py-4 [scrollbar-width:none] sm:px-14 [&::-webkit-scrollbar]:hidden">
+          {QUICK_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex h-9 shrink-0 items-center whitespace-nowrap rounded-full border border-[#e8ebed] px-3.5 text-sm font-semibold text-[#3b3e3f] transition-colors hover:border-[#ff0022] hover:text-[#ff0022]"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <MoneyPagesCarousel />
+      <FeaturedToursCarousel />
+
+      {/* ---------- validation teasers ---------- */}
+      <section className="border-b border-[#e8ebed] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">Before you book</p>
+          <h2 className="mt-2 font-sans text-[28px] font-extrabold leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-[36px]">
+            Know Before You Go
+          </h2>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="overflow-hidden rounded-2xl bg-[rgba(237,56,54,0.06)] transition-shadow duration-300 hover:shadow-[0_16px_32px_rgba(26,26,26,0.06)]">
+              <div className="relative aspect-[16/9] bg-[#f4f4f4]">
+                <SafeImage
+                  src={WORTH_IT_PAGE.image.src}
+                  alt={WORTH_IT_PAGE.image.alt}
+                  fill
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h3 className="font-sans text-[17px] font-bold leading-snug text-[#1a1a1a]">{WORTH_IT_PAGE.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[#5c6166]">
+                  Short answer: yes, if you book the arena-floor add-on directly — here&rsquo;s the honest breakdown,
+                  including when it isn&rsquo;t worth the extra cost.
+                </p>
+                <Link href={WORTH_IT_PAGE.href} className="mt-4 inline-block text-sm font-bold text-[#ff0022] hover:underline">
+                  Read the verdict &rarr;
+                </Link>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-[#e8ebed] bg-white transition-shadow duration-300 hover:shadow-[0_16px_32px_rgba(26,26,26,0.06)]">
+              <div className="relative aspect-[16/9] bg-[#f4f4f4]">
+                <SafeImage
+                  src={ARENA_FLOOR_PAGE.image.src}
+                  alt={ARENA_FLOOR_PAGE.image.alt}
+                  fill
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h3 className="font-sans text-[17px] font-bold leading-snug text-[#1a1a1a]">{ARENA_FLOOR_PAGE.title}</h3>
+                <span className="mt-3 inline-block w-fit rounded-full bg-[#f4f4f4] px-2.5 py-1 text-xs font-semibold text-[#5c6166]">
+                  {ARENA_FLOOR_PAGE.keyword}
+                </span>
+                <p className="mt-3 text-sm leading-relaxed text-[#5c6166]">
+                  First-hand photography, step by step, from the entrance to the reconstructed floor itself.
+                </p>
+                <Link href={ARENA_FLOOR_PAGE.href} className="mt-4 inline-block text-sm font-bold text-[#ff0022] hover:underline">
+                  Read &rarr;
+                </Link>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-[#e8ebed] bg-white transition-shadow duration-300 hover:shadow-[0_16px_32px_rgba(26,26,26,0.06)]">
+              <div className="relative aspect-[16/9] bg-[#f4f4f4]">
+                <SafeImage
+                  src="https://images.unsplash.com/photo-1590273971191-2af8df641e2c"
+                  alt="Wide view of the Colosseum under a dramatic sky"
+                  fill
+                  sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 90vw"
+                  className="object-cover"
+                />
+                <span className="absolute left-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#b8862e] backdrop-blur-sm">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+                    <path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                </span>
+              </div>
+              <div className="p-6">
+                <h3 className="font-sans text-[17px] font-bold leading-snug text-[#1a1a1a]">Opening Hours at a Glance</h3>
+                <ul className="mt-3 divide-y divide-[#e8ebed] text-[14.5px] text-[#5c6166]">
+                  <li className="flex items-center justify-between gap-3 py-1.5">
+                    <span>Summer (late Mar–Aug)</span>
+                    <span className="font-bold text-[#1a1a1a]">8:30am–7:15pm</span>
+                  </li>
+                  <li className="flex items-center justify-between gap-3 py-1.5">
+                    <span>Autumn (Sep–Oct)</span>
+                    <span className="font-bold text-[#1a1a1a]">8:30am–6:30/7pm</span>
+                  </li>
+                  <li className="flex items-center justify-between gap-3 py-1.5">
+                    <span>Winter (Nov–mid Feb)</span>
+                    <span className="font-bold text-[#1a1a1a]">8:30am–4:30/5pm</span>
+                  </li>
+                </ul>
+                <p className="mt-3 text-xs leading-relaxed text-[#9aa0a5]">
+                  Closed Jan 1, May 1 &amp; Dec 25. Hours shift with sunset — always confirm before you go.
+                </p>
+                <Link href="/opening-hours-beating-the-crowds" className="mt-4 inline-block text-sm font-bold text-[#ff0022] hover:underline">
+                  Full crowd-avoidance guide &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- plan your visit / support pages ---------- */}
+      <section id="plan-your-visit" className="scroll-mt-[65px] border-b border-[#e8ebed] bg-[#f9fafa] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">Free planning guides</p>
+          <h2 className="mt-2 font-sans text-[28px] font-extrabold leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-[36px]">
+            Plan Your Visit
+          </h2>
+          <p className="mt-3 max-w-[62ch] text-[15.5px] leading-relaxed text-[#5c6166]">
+            Each page below feeds trust into one of the money pages above — every link here lands on a page that
+            converts.
+          </p>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            {SUPPORT_PAGES.map((page) => (
+              <Link
+                key={page.href}
+                href={page.href}
+                className="group flex items-center gap-4 rounded-2xl border border-[#e8ebed] bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white hover:shadow-[0_16px_32px_rgba(26,26,26,0.06)]"
+              >
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#f4f4f4] sm:h-[72px] sm:w-[72px]">
+                  <SafeImage src={page.image.src} alt={page.image.alt} fill sizes="72px" className="object-cover" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-[15px] font-bold leading-snug text-[#1a1a1a]">{page.title}</h3>
+                  <span className="mt-2 inline-block w-fit rounded-full bg-[#f4f4f4] px-2.5 py-1 text-xs font-semibold text-[#5c6166]">
+                    {page.keyword}
+                  </span>
+                </div>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#e8ebed] text-[#9aa0a5] transition-colors group-hover:border-[#ff0022] group-hover:text-[#ff0022]">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- FAQ ---------- */}
+      <section id="faq" className="scroll-mt-[65px] border-b border-[#e8ebed] py-16 sm:py-20">
+        <div className="mx-auto max-w-[760px] px-6 sm:px-14">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">Fast answers</p>
+          <h2 className="mt-2 text-center font-sans text-[28px] font-extrabold leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-[36px]">
+            Frequently Asked
+          </h2>
+          <div className="mt-8 divide-y divide-[#e8ebed] rounded-2xl border border-[#e8ebed] bg-white">
+            {FAQS.map((faq) => (
+              <details key={faq.question} className="group px-6 py-5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-base font-semibold text-[#1a1a1a] marker:content-none">
+                  {faq.question}
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                    className="shrink-0 text-[#9aa0a5] transition-transform group-open:rotate-180"
+                  >
+                    <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-[#5c6166]">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <UCAuthorBox />
+      <UCFooter />
+    </div>
+  );
+}
