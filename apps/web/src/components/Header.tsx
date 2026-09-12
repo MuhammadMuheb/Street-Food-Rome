@@ -40,7 +40,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-2 px-6 sm:px-14">
         <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-          <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Link href="/" className="flex min-w-0 items-center gap-2">
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ff0022] text-white">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
@@ -52,7 +52,7 @@ export function Header() {
                 />
               </svg>
             </span>
-            <span className="whitespace-nowrap text-base font-bold tracking-tight text-[#1a1a1a] sm:text-lg">
+            <span className="truncate text-base font-bold tracking-tight text-[#1a1a1a] sm:text-lg">
               street food rome
             </span>
           </Link>

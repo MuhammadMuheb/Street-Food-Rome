@@ -37,7 +37,7 @@ export function AccountMenu() {
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-full mt-3 w-72 rounded-2xl border border-[#e8ebed] bg-white p-4 shadow-[0_16px_48px_rgba(45,51,57,0.18)]">
+        <div className="fixed inset-x-4 top-[73px] z-50 rounded-2xl border border-[#e8ebed] bg-white p-4 shadow-[0_16px_48px_rgba(45,51,57,0.18)] sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-3 sm:w-72">
           <p className="text-sm font-bold text-[#1a1a1a]">Welcome to Street Food Rome</p>
           <p className="mt-1 text-xs text-[#9aa0a5]">Sign in to save tours and book faster.</p>
 

@@ -54,7 +54,7 @@ export function ViewToursMenu() {
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] bg-[#ff0022] px-3 text-sm font-bold text-white sm:h-10 sm:px-4 sm:text-base"
+        className="flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[6px] bg-[#ff0022] px-3 text-sm font-bold text-white sm:h-10 sm:px-4 sm:text-base"
       >
         View Tours
         <svg
@@ -70,7 +70,7 @@ export function ViewToursMenu() {
       </button>
 
       {open ? (
-        <div className="absolute left-0 top-full z-50 mt-3 w-[92vw] max-w-[560px] rounded-2xl border border-[#e8ebed] bg-white p-6 shadow-[0_16px_48px_rgba(45,51,57,0.18)]">
+        <div className="fixed inset-x-4 top-[73px] z-50 max-h-[calc(100vh-90px)] overflow-y-auto rounded-2xl border border-[#e8ebed] bg-white p-6 shadow-[0_16px_48px_rgba(45,51,57,0.18)] sm:absolute sm:inset-x-auto sm:left-0 sm:top-full sm:mt-3 sm:max-h-none sm:w-[92vw] sm:max-w-[560px] sm:overflow-visible">
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
             <div>
               <ColumnHeading>Pages</ColumnHeading>
