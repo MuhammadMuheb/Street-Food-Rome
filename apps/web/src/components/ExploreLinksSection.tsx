@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import type { BlogPostDoc, TourDoc } from '@/lib/firestore';
-import { NEIGHBORHOODS, getBlogPostForLandmark, tourHref } from '@/lib/tours';
+import { NETWORK_SITES, getBlogPostForLandmark, tourHref } from '@/lib/tours';
 
 /** Neighbourhood/market items link to /neighborhoods/{slug}; pure landmarks (no dedicated
  *  hub page exists or is planned for them) link to a matching blog post via `landmarkSlug`,
@@ -37,6 +37,8 @@ type Tab = (typeof TABS)[number];
 interface LinkItem {
   label: string;
   href: string | null;
+  /** Suppresses the position-number prefix — used for the network sites' clean labels. */
+  hideNumber?: boolean;
 }
 
 export function ExploreLinksSection({ tours, allBlogPosts }: { tours: TourDoc[]; allBlogPosts: BlogPostDoc[] }) {
@@ -51,12 +53,11 @@ export function ExploreLinksSection({ tours, allBlogPosts }: { tours: TourDoc[];
     return { label: a.label, href: '/blog' };
   });
 
-  // "Top Destinations" used to be a legacy multi-city list left over from a former
-  // multi-tenant platform; this is a single-city site now, so it points at the same
-  // 10 Rome neighbourhoods as the "Top Attractions" tab instead.
-  const destinationItems: LinkItem[] = NEIGHBORHOODS.map((n) => ({
-    label: n.name,
-    href: `/neighborhoods/${n.slug}`,
+  // Sister properties in the same affiliate network — each links to its own internal page.
+  const destinationItems: LinkItem[] = NETWORK_SITES.map((site) => ({
+    label: site.name,
+    href: `/${site.slug}`,
+    hideNumber: true,
   }));
 
   const tourItems: LinkItem[] = [
@@ -106,12 +107,16 @@ export function ExploreLinksSection({ tours, allBlogPosts }: { tours: TourDoc[];
                 href={item.href}
                 className="flex items-baseline gap-2 text-[15px] text-[#3b3e3f] transition-colors hover:text-[#ff0022]"
               >
-                <span className="tabular-nums text-sm text-[#9aa0a5]">{index + 1}.</span>
+                {item.hideNumber ? null : (
+                  <span className="tabular-nums text-sm text-[#9aa0a5]">{index + 1}.</span>
+                )}
                 <span className="font-medium">{item.label}</span>
               </Link>
             ) : (
               <span key={item.label} className="flex items-baseline gap-2 text-[15px] text-[#3b3e3f]">
-                <span className="tabular-nums text-sm text-[#9aa0a5]">{index + 1}.</span>
+                {item.hideNumber ? null : (
+                  <span className="tabular-nums text-sm text-[#9aa0a5]">{index + 1}.</span>
+                )}
                 <span className="font-medium">{item.label}</span>
               </span>
             ),

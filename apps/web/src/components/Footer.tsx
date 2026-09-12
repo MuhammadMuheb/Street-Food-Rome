@@ -1,5 +1,8 @@
-import Link from 'next/link';
-import { NEIGHBORHOODS } from '@/lib/tours';
+'use client';
+
+import { usePathname } from 'next/navigation';
+import Link from '@/components/NetworkLink';
+import { NETWORK_SITES, isUnbuiltNetworkRoute } from '@/lib/tours';
 
 const COMPANY_LINKS = [
   { label: 'Home', href: '/' },
@@ -10,12 +13,6 @@ const COMPANY_LINKS = [
   { label: 'Top Attractions', href: '/neighborhoods' },
   { label: 'All Destinations', href: '/tours' },
 ];
-
-// Street Food Rome is a single-city site — this used to be an 8-city legacy
-// list from a former multi-tenant platform. Replaced with the 10 Rome
-// neighbourhood guides so the slot stays on-topic instead of pointing at
-// content this site doesn't have.
-const DESTINATION_LINKS = NEIGHBORHOODS;
 
 const LEGAL_LINKS = [
   { label: 'Privacy Policy', href: '/privacy' },
@@ -61,6 +58,9 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+
+  if (isUnbuiltNetworkRoute(pathname)) return null;
 
   return (
     <footer className="border-t border-[#e8ebed] bg-[#f9fafa]">
@@ -118,15 +118,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wide text-[#1a1a1a]">Popular Destinations</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wide text-[#1a1a1a]">Our Network</h3>
             <ul className="mt-4 space-y-3">
-              {DESTINATION_LINKS.map((n) => (
-                <li key={n.slug}>
+              {NETWORK_SITES.map((site) => (
+                <li key={site.number}>
                   <Link
-                    href={`/neighborhoods/${n.slug}`}
+                    href={`/${site.slug}`}
                     className="text-sm text-[#5c6166] transition-colors hover:text-[#ff0022]"
                   >
-                    {n.name}
+                    {site.name}
                   </Link>
                 </li>
               ))}

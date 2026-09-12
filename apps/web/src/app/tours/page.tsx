@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import { getAllTours, SITE_DOMAIN, type TourDoc } from '@/lib/firestore';
 import { InnerHero } from '@/components/InnerHero';
 import { TourCard } from '@/components/TourCard';

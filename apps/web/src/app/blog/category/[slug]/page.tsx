@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import { notFound } from 'next/navigation';
 import { getAllBlogPosts, getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
 import { InnerHero } from '@/components/InnerHero';
 import { SafeImage } from '@/components/SafeImage';
 import { BLOG_CATEGORIES, getBlogCategory } from '@/lib/blog';
-import { CATEGORIES, NEIGHBORHOODS } from '@/lib/tours';
+import { CATEGORIES, NETWORK_SITES } from '@/lib/tours';
 
 export const revalidate = 3600;
 
@@ -123,12 +123,12 @@ export default async function BlogCategoryPage({ params }: { params: Promise<{ s
               </ul>
             </div>
             <div>
-              <h2 className="font-display text-base font-semibold text-[#1a1a1a]">Explore by neighbourhood</h2>
+              <h2 className="font-display text-base font-semibold text-[#1a1a1a]">Our Network</h2>
               <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-                {NEIGHBORHOODS.map((n) => (
-                  <li key={n.slug}>
-                    <Link href={`/neighborhoods/${n.slug}`} className="font-bold text-[#ff0022] hover:underline">
-                      {n.name}
+                {NETWORK_SITES.map((site) => (
+                  <li key={site.number}>
+                    <Link href={`/${site.slug}`} className="font-bold text-[#ff0022] hover:underline">
+                      {site.name}
                     </Link>
                   </li>
                 ))}

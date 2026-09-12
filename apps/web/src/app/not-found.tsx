@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 
 export const metadata: Metadata = {
   title: 'Page Not Found',

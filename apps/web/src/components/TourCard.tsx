@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import type { TourDoc } from '@/lib/firestore';
 import { SafeImage } from './SafeImage';
 import { tourHref } from '@/lib/tours';

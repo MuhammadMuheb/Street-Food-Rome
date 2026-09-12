@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import { notFound } from 'next/navigation';
 import { getAllBlogPosts, getAuthor, getBlogPostBySlug, SITE_DOMAIN } from '@/lib/firestore';
 import { SafeImage } from '@/components/SafeImage';

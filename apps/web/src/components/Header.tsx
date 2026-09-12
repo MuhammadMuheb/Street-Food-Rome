@@ -1,15 +1,28 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import { usePathname } from 'next/navigation';
 import { AccountMenu } from './AccountMenu';
 import { ViewToursMenu } from './ViewToursMenu';
+import { NETWORK_SITES, isUnbuiltNetworkRoute } from '@/lib/tours';
 
 export function Header() {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
-  const isHomepage = usePathname() === '/';
+  const pathname = usePathname();
+  const isUnbuilt = isUnbuiltNetworkRoute(pathname);
+  // Each network property's page ('/{slug}') and all its sub-pages
+  // ('/{slug}/about', '/{slug}/tours', ...) render the same site, rebranded
+  // with that property's own name in place of "street food rome" — the brand
+  // applies across the whole prefix, but "is this the homepage" (which hides
+  // the top search bar, since the Hero below already has its own) only holds
+  // at the exact root, same as the unprefixed site.
+  const segments = pathname.split('/').filter(Boolean);
+  const networkSite = NETWORK_SITES.find((s) => s.slug === segments[0]);
+  const isHomepage = networkSite ? segments.length === 1 : pathname === '/';
+  const brandName = networkSite ? networkSite.name.toLowerCase() : 'street food rome';
+  const brandHref = networkSite ? `/${networkSite.slug}` : '/';
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -32,6 +45,8 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  if (isUnbuilt) return null;
+
   return (
     <header
       className={`sticky top-0 z-40 h-[65px] border-b border-[#e8ebed] bg-white ${
@@ -40,7 +55,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-2 px-6 sm:px-14">
         <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-          <Link href="/" className="flex min-w-0 items-center gap-2">
+          <Link href={brandHref} className="flex min-w-0 items-center gap-2">
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ff0022] text-white">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
@@ -53,7 +68,7 @@ export function Header() {
               </svg>
             </span>
             <span className="truncate text-base font-bold tracking-tight text-[#1a1a1a] sm:text-lg">
-              street food rome
+              {brandName}
             </span>
           </Link>
 

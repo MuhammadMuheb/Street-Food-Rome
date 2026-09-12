@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import { SafeImage } from './SafeImage';
 
 export const ABOUT_HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1759843541277-14651600026c';

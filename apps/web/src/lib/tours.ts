@@ -96,6 +96,58 @@ export const TOURS: TourRegistryEntry[] = [
   { seoSlug: 'prati-neighborhood-food-crawl', realSlug: 'prati-neighborhood-food-crawl', category: 'street-food-classics', neighborhood: 'prati' },
 ];
 
+export interface NetworkSiteDef {
+  /** Two-digit display number, as given (starts at 02, not 01). */
+  number: string;
+  name: string;
+  /** URL segment at /{slug} (top-level) — an internal placeholder page, not an external .com link. */
+  slug: string;
+}
+
+/**
+ * Sister properties in the same affiliate network. Each gets its own internal
+ * placeholder page at /{slug} — no external .com links.
+ */
+export const NETWORK_SITES: NetworkSiteDef[] = [
+  { number: '02', name: 'Underground Colosseum', slug: 'underground-colosseum' },
+  { number: '03', name: 'Pompeii Day Trip', slug: 'pompeii-day-trip' },
+  { number: '04', name: 'Rome Vespa', slug: 'rome-vespa' },
+  { number: '05', name: 'Street Food Rome', slug: 'street-food-rome' },
+  { number: '06', name: 'Tuscany Day Trip', slug: 'tuscany-day-trip' },
+  { number: '07', name: 'Private Vatican', slug: 'private-vatican' },
+  { number: '08', name: 'Golf Cart Rome', slug: 'golf-cart-rome' },
+  { number: '09', name: 'Cooking in Rome', slug: 'cooking-in-rome' },
+  { number: '10', name: 'Rome Pizza Class', slug: 'rome-pizza-class' },
+  { number: '11', name: 'Tiramisu Class', slug: 'tiramisu-class' },
+  { number: '12', name: 'Naples Street Food', slug: 'naples-street-food' },
+  { number: '13', name: 'Amalfi Day Trip', slug: 'amalfi-day-trip' },
+  { number: '14', name: 'Tivoli Day Trip', slug: 'tivoli-day-trip' },
+];
+
+/**
+ * Only this one network property is wired up to actually render the full
+ * site — a single live test case while the other 12 are separate, not-yet-
+ * built projects. Their routes (root and any sub-path) show a plain
+ * "under construction" placeholder instead of loading this site's content.
+ */
+export const ACTIVE_NETWORK_SLUG = 'street-food-rome';
+
+export function getNetworkSite(slug: string): NetworkSiteDef | undefined {
+  return NETWORK_SITES.find((s) => s.slug === slug);
+}
+
+/**
+ * True for /{slug} or any /{slug}/... path belonging to one of the 12
+ * not-yet-built network properties. Header and Footer both check this and
+ * render nothing at all on these routes — they must be fully isolated, blank
+ * pages with no site chrome, not just a page missing its content.
+ */
+export function isUnbuiltNetworkRoute(pathname: string): boolean {
+  const firstSegment = pathname.split('/')[1] ?? '';
+  const site = getNetworkSite(firstSegment);
+  return site !== undefined && site.slug !== ACTIVE_NETWORK_SLUG;
+}
+
 export interface LandmarkDef {
   slug: string;
   name: string;
@@ -121,9 +173,6 @@ export const LANDMARKS: LandmarkDef[] = [
   { slug: 'via-del-corso', name: 'Via del Corso' },
 ];
 
-export function getLandmark(slug: string): LandmarkDef | undefined {
-  return LANDMARKS.find((l) => l.slug === slug);
-}
 
 /** First published blog post tagged with this landmark's slug, if any. */
 export function getBlogPostForLandmark(posts: BlogPostDoc[], landmarkSlug: string): BlogPostDoc | undefined {

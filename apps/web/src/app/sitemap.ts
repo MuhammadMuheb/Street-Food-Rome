@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getAllBlogPosts, listPageDocs, SITE_DOMAIN, type PageDoc } from '@/lib/firestore';
-import { CATEGORIES, NEIGHBORHOODS, TOURS } from '@/lib/tours';
+import { CATEGORIES, NEIGHBORHOODS, NETWORK_SITES, TOURS } from '@/lib/tours';
 
 // Only these PageDoc slugs have a live route — Firestore may still hold
 // orphaned docs from pages that were removed from the site; keep those out
@@ -113,6 +113,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: PRIORITY_TIERS.guide.priority,
   }));
 
+  // Placeholder pages for sister network properties — low priority since
+  // content is still being built out.
+  const networkEntries = NETWORK_SITES.map((site) => ({
+    url: `https://${SITE_DOMAIN}/${site.slug}`,
+    changeFrequency: PRIORITY_TIERS.legal.changeFrequency,
+    priority: PRIORITY_TIERS.legal.priority,
+  }));
+
   const blogEntries = posts.map((post) => ({
     url: `https://${SITE_DOMAIN}/blog/${post.slug}`,
     lastModified: post.publishedAt,
@@ -140,6 +148,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryEntries,
     neighborhoodsHubEntry,
     ...neighborhoodEntries,
+    ...networkEntries,
     blogIndexEntry,
     ...blogCategoryEntries,
     ...blogEntries,

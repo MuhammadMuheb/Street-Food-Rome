@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getAllTours, getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
 import { InnerHero } from '@/components/InnerHero';
 import { TourCard } from '@/components/TourCard';
-import Link from 'next/link';
+import Link from '@/components/NetworkLink';
 import { CATEGORIES, getNeighborhood, getTourEntryByRealSlug, tourHref } from '@/lib/tours';
 
 export const revalidate = 3600;

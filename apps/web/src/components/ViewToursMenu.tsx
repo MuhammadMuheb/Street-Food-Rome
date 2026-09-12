@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import { CATEGORIES, NEIGHBORHOODS } from '@/lib/tours';
+import Link from '@/components/NetworkLink';
+import { CATEGORIES, NETWORK_SITES } from '@/lib/tours';
 
 interface NavItem {
   label: string;
@@ -22,11 +22,6 @@ const TOURS_AND_BLOG: NavItem[] = [
   ...CATEGORIES.map((c) => ({ label: `${c.name} Tours`, href: `/tours/category/${c.slug}` })),
   { label: 'Blog', href: '/blog' },
 ];
-
-const NEIGHBORHOOD_LINKS: NavItem[] = NEIGHBORHOODS.map((n) => ({
-  label: n.name,
-  href: `/neighborhoods/${n.slug}`,
-}));
 
 function ColumnHeading({ children }: { children: React.ReactNode }) {
   return <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#9aa0a5]">{children}</p>;
@@ -70,7 +65,7 @@ export function ViewToursMenu() {
       </button>
 
       {open ? (
-        <div className="fixed inset-x-4 top-[73px] z-50 max-h-[calc(100vh-90px)] overflow-y-auto rounded-2xl border border-[#e8ebed] bg-white p-6 shadow-[0_16px_48px_rgba(45,51,57,0.18)] sm:absolute sm:inset-x-auto sm:left-0 sm:top-full sm:mt-3 sm:max-h-none sm:w-[92vw] sm:max-w-[560px] sm:overflow-visible">
+        <div className="fixed inset-x-4 top-[73px] z-50 max-h-[calc(100vh-90px)] overflow-y-auto rounded-2xl border border-[#e8ebed] bg-white p-6 shadow-[0_16px_48px_rgba(45,51,57,0.18)] lg:absolute lg:inset-x-auto lg:left-0 lg:top-full lg:mt-3 lg:max-h-none lg:w-[92vw] lg:max-w-[560px] lg:overflow-visible">
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
             <div>
               <ColumnHeading>Pages</ColumnHeading>
@@ -98,13 +93,14 @@ export function ViewToursMenu() {
               </ul>
             </div>
 
+            {/* Sister properties in the same affiliate network — each links to its own internal page. */}
             <div className="col-span-2 sm:col-span-1">
-              <ColumnHeading>Explore by Neighbourhood</ColumnHeading>
+              <ColumnHeading>Our Network</ColumnHeading>
               <ul className="mt-3 space-y-2.5">
-                {NEIGHBORHOOD_LINKS.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href} onClick={() => setOpen(false)} className={linkClass}>
-                      {item.label}
+                {NETWORK_SITES.map((site) => (
+                  <li key={site.number}>
+                    <Link href={`/${site.slug}`} onClick={() => setOpen(false)} className={linkClass}>
+                      {site.name}
                     </Link>
                   </li>
                 ))}
