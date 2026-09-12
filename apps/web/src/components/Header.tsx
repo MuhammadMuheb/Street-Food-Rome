@@ -85,16 +85,6 @@ export function Header() {
         )}
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-5">
-          <button
-            type="button"
-            className="hidden items-center gap-1.5 text-base font-medium text-[#2b2e2f] sm:flex"
-          >
-            <span className="text-base leading-none">🇺🇸</span>
-            USD
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
           <AccountMenu />
           <button type="button" aria-label="Bag" className="text-[#2b2e2f]">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">

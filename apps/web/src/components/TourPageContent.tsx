@@ -1,22 +1,48 @@
 import Link from 'next/link';
-import type { TourDoc } from '@/lib/firestore';
+import { SITE_DOMAIN, type TourDoc } from '@/lib/firestore';
+import { tourHref } from '@/lib/tours';
 import { SafeImage } from './SafeImage';
 
-/** The only 3 tour pages this site exposes — exact URL paired with the real Firestore tour slug it renders. */
-export const KEPT_TOURS = [
-  { path: 'trastevere-food-tour', realSlug: 'trastevere-food-wine-walk' },
-  { path: 'jewish-ghetto-tour', realSlug: 'jewish-ghetto-food-tour' },
-  { path: 'street-food-market-tour', realSlug: 'testaccio-market-food-tour' },
-] as const;
+interface CategoryCrumb {
+  label: string;
+  href: string;
+}
+
+interface NeighborhoodLink {
+  name: string;
+  href: string;
+}
 
 interface TourPageContentProps {
   tour: TourDoc;
   otherTours: { title: string; href: string }[];
+  /** Category hub this tour belongs to, for the "Home / Category / Tour" breadcrumb. */
+  category?: CategoryCrumb;
+  /** Neighbourhood hub this tour is set in, if any — cross-links to /neighborhoods/{slug}. */
+  neighborhood?: NeighborhoodLink;
 }
 
-export function TourPageContent({ tour, otherTours }: TourPageContentProps) {
+export function TourPageContent({ tour, otherTours, category, neighborhood }: TourPageContentProps) {
+  // TouristTrip rather than Product/AggregateOffer: `priceBand` is a free-text
+  // range (e.g. "€30-60"), not a structured min/max, so a numeric Offer would
+  // mean fabricating a price we don't actually have. TouristTrip lets us
+  // describe the tour honestly (name, description, itinerary partner) without
+  // inventing offer data.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristTrip',
+    name: tour.title,
+    ...(tour.firstHandNotes ? { description: tour.firstHandNotes } : {}),
+    ...(tour.imageUrl ? { image: tour.imageUrl } : {}),
+    touristType: 'Food and culinary tourists',
+    itinerary: { '@type': 'Place', name: `${tour.city}, Italy` },
+    url: `https://${SITE_DOMAIN}${tourHref(tour.slug)}`,
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <section className="bg-[#f9fafa] py-10 sm:py-14">
         <div className="mx-auto max-w-[1100px] px-6 sm:px-14">
           <nav className="text-sm text-[#9aa0a5]">
@@ -24,6 +50,14 @@ export function TourPageContent({ tour, otherTours }: TourPageContentProps) {
               Home
             </Link>
             <span className="mx-2">/</span>
+            {category ? (
+              <>
+                <Link href={category.href} className="hover:text-[#ff0022]">
+                  {category.label}
+                </Link>
+                <span className="mx-2">/</span>
+              </>
+            ) : null}
             <span className="text-[#5c6166]">{tour.title}</span>
           </nav>
 
@@ -43,6 +77,14 @@ export function TourPageContent({ tour, otherTours }: TourPageContentProps) {
             ) : null}
             <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-[#5c6166]">Free Cancellation</span>
             <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-[#5c6166]">Small Group</span>
+            {neighborhood ? (
+              <Link
+                href={neighborhood.href}
+                className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-[#5c6166] hover:text-[#ff0022]"
+              >
+                Set in {neighborhood.name}
+              </Link>
+            ) : null}
           </div>
         </div>
       </section>

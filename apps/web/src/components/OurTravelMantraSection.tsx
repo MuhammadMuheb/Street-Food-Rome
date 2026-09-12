@@ -32,7 +32,7 @@ export function OurTravelMantraSection() {
         <div className="mt-14 grid grid-cols-1 gap-x-16 gap-y-10 lg:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#f4f4f4]">
             <SafeImage
-              src="https://images.unsplash.com/photo-1539267821515-9a48cb52c2bb"
+              src="https://images.unsplash.com/photo-1532117472055-4d0734b51f31"
               alt="Sharing wine and a meal together in Rome"
               fill
               sizes="(min-width: 1024px) 560px, 90vw"
@@ -60,7 +60,7 @@ export function OurTravelMantraSection() {
 
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#f4f4f4] lg:mt-16">
             <SafeImage
-              src="https://images.unsplash.com/photo-1775401289506-740fd612488d"
+              src="https://images.unsplash.com/photo-1696407868324-460a69a81c11"
               alt="A guide leading a small group through Trastevere"
               fill
               sizes="(min-width: 1024px) 560px, 90vw"

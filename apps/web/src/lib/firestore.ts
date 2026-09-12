@@ -48,6 +48,9 @@ export interface TourDoc {
   niche: string[];
   imageUrl: string | null;
   firstHandNotes: string | null;
+  /** Rome neighbourhood this tour is set in (e.g. "trastevere"), for cross-linking with /neighborhoods/{slug}.
+   *  Not yet populated on most existing Firestore docs — reads default this to null. */
+  neighborhood: string | null;
 }
 
 export interface PageFaq {
@@ -58,7 +61,7 @@ export interface PageFaq {
 export interface PageDoc {
   slug: string;
   title: string;
-  type: 'money' | 'support' | 'about' | 'legal';
+  type: 'money' | 'support' | 'about' | 'legal' | 'category' | 'guide';
   bodyHtml: string | null;
   heroImageUrl: string | null;
   authorId: string | null;
@@ -85,16 +88,34 @@ export interface BlogPostDoc {
   publishedAt: string;
   metaTitle: string;
   metaDesc: string;
+  /** One of the 5 blog taxonomy slugs (food-guides, neighborhood-guides, practical-tips,
+   *  itineraries, seasonal-events). Not yet populated on existing docs — defaults to null. */
+  categorySlug: string | null;
+  /** One of the LANDMARKS slugs in lib/tours.ts (e.g. "trevi-fountain"), for
+   *  linking a landmark mention on the homepage to a real post about it.
+   *  Not yet populated on existing docs — defaults to null. */
+  landmarkSlug: string | null;
+  /** `authors` collection doc id — for a byline via getAuthor(). Not yet
+   *  populated on existing docs — defaults to null. */
+  authorId: string | null;
+}
+
+function normalizeTour(data: FirebaseFirestore.DocumentData): TourDoc {
+  return { neighborhood: null, ...data } as TourDoc;
+}
+
+function normalizeBlogPost(data: FirebaseFirestore.DocumentData): BlogPostDoc {
+  return { categorySlug: null, landmarkSlug: null, authorId: null, ...data } as BlogPostDoc;
 }
 
 export async function getAllTours(): Promise<TourDoc[]> {
   const snap = await getDb().collection('tours').get();
-  return snap.docs.map((doc) => doc.data() as TourDoc);
+  return snap.docs.map((doc) => normalizeTour(doc.data()));
 }
 
 export async function getTourBySlug(slug: string): Promise<TourDoc | null> {
   const snap = await getDb().collection('tours').doc(slug).get();
-  return snap.exists ? (snap.data() as TourDoc) : null;
+  return snap.exists ? normalizeTour(snap.data()!) : null;
 }
 
 export async function getPageDoc(slug: string): Promise<PageDoc | null> {
@@ -114,10 +135,10 @@ export async function getAuthor(id: string): Promise<AuthorDoc | null> {
 
 export async function getAllBlogPosts(): Promise<BlogPostDoc[]> {
   const snap = await getDb().collection('blogPosts').orderBy('publishedAt', 'desc').get();
-  return snap.docs.map((doc) => doc.data() as BlogPostDoc);
+  return snap.docs.map((doc) => normalizeBlogPost(doc.data()));
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPostDoc | null> {
   const snap = await getDb().collection('blogPosts').doc(slug).get();
-  return snap.exists ? (snap.data() as BlogPostDoc) : null;
+  return snap.exists ? normalizeBlogPost(snap.data()!) : null;
 }

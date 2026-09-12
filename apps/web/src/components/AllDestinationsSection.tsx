@@ -1,15 +1,5 @@
 import Link from 'next/link';
-
-const DESTINATIONS = [
-  'Trastevere',
-  'Testaccio',
-  'Jewish Ghetto',
-  "Campo de' Fiori",
-  'Monti',
-  'Prati',
-  'San Lorenzo',
-  'Pigneto',
-];
+import { NEIGHBORHOODS } from '@/lib/tours';
 
 export function AllDestinationsSection() {
   return (
@@ -23,13 +13,13 @@ export function AllDestinationsSection() {
         </div>
 
         <div className="mx-auto mt-10 grid max-w-[720px] grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4">
-          {DESTINATIONS.map((name) => (
+          {NEIGHBORHOODS.map((n) => (
             <Link
-              key={name}
-              href="#"
+              key={n.slug}
+              href={`/neighborhoods/${n.slug}`}
               className="text-sm text-[#5c6166] transition-colors hover:text-[#ff0022]"
             >
-              {name}
+              {n.name}
             </Link>
           ))}
         </div>

@@ -19,8 +19,20 @@ export default async function FaqPage() {
   const page = await getPageDoc('faq');
   if (!page) notFound();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: page.faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <InnerHero
         title={page.title}
         subtitle="Booking, cancellations, and what this site actually covers."

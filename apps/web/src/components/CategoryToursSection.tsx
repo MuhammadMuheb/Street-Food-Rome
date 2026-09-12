@@ -6,8 +6,9 @@ import { TourCard } from './TourCard';
 const CATEGORIES = [
   {
     name: 'Pizza',
+    categorySlug: 'pizza',
     ctaLabel: 'Explore Pizza Tours',
-    imageUrl: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca',
+    imageUrl: 'https://images.unsplash.com/photo-1664309641932-0e03e0771b97',
     slugs: [
       'pizza-al-taglio-suppli-tasting-tour',
       'trastevere-pizza-craft-beer-crawl',
@@ -16,8 +17,9 @@ const CATEGORIES = [
   },
   {
     name: 'Pasta',
+    categorySlug: 'pasta',
     ctaLabel: 'Check Availability',
-    imageUrl: 'https://images.unsplash.com/photo-1516100882582-96c3a05fe590',
+    imageUrl: 'https://images.unsplash.com/photo-1755594461640-b800c6bafdfa',
     slugs: [
       'pasta-making-class-trastevere',
       'cacio-e-pepe-carbonara-tasting-walk',
@@ -26,18 +28,21 @@ const CATEGORIES = [
   },
   {
     name: 'Beer & Wine',
+    categorySlug: 'beer-and-wine',
     ctaLabel: 'Explore Experience',
     imageUrl: 'https://images.unsplash.com/photo-1783443800128-8893eac948bb',
     slugs: ['rome-food-wine-tasting', 'monti-food-wine-evening', 'trastevere-food-wine-walk'],
   },
   {
     name: 'Gelato',
+    categorySlug: 'gelato',
     ctaLabel: 'Discover Gelato Tours',
     imageUrl: 'https://images.unsplash.com/photo-1759314420838-36d3d881c81c',
     slugs: ['roman-gelato-tasting-walk', 'best-gelaterias-of-rome-tour', 'gelato-espresso-crawl'],
   },
   {
     name: 'Suppli & Street Food Classics',
+    categorySlug: 'street-food-classics',
     ctaLabel: 'See Street Food Tours',
     imageUrl: 'https://images.unsplash.com/photo-1688458296759-91020b4ff2ba',
     slugs: [
@@ -48,7 +53,17 @@ const CATEGORIES = [
   },
 ];
 
-function CategoryCard({ name, ctaLabel, imageUrl }: { name: string; ctaLabel: string; imageUrl: string }) {
+function CategoryCard({
+  name,
+  ctaLabel,
+  imageUrl,
+  href,
+}: {
+  name: string;
+  ctaLabel: string;
+  imageUrl: string;
+  href: string;
+}) {
   return (
     <div className="relative col-span-1 overflow-hidden rounded-2xl sm:col-span-2 lg:col-span-1">
       <div className="relative aspect-[4/3] h-full min-h-[260px] overflow-hidden bg-[#f4f4f4] sm:min-h-[300px] lg:aspect-auto">
@@ -64,7 +79,7 @@ function CategoryCard({ name, ctaLabel, imageUrl }: { name: string; ctaLabel: st
       <div className="absolute inset-x-0 bottom-0 p-5">
         <h3 className="font-sans text-2xl font-extrabold text-white">{name}</h3>
         <Link
-          href="#"
+          href={href}
           className="mt-3 inline-flex h-10 items-center justify-center rounded-[6px] bg-white px-4 text-sm font-bold text-[#1a1a1a] transition-colors hover:bg-[#f4f4f4]"
         >
           {ctaLabel}
@@ -102,7 +117,12 @@ export function CategoryToursSection({ tours }: { tours: TourDoc[] }) {
                 key={category.name}
                 className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1.1fr_1fr_1fr_1fr]"
               >
-                <CategoryCard name={category.name} ctaLabel={category.ctaLabel} imageUrl={category.imageUrl} />
+                <CategoryCard
+                  name={category.name}
+                  ctaLabel={category.ctaLabel}
+                  imageUrl={category.imageUrl}
+                  href={`/tours/category/${category.categorySlug}`}
+                />
                 {categoryTours.map((tour) => (
                   <TourCard key={tour.slug} tour={tour} />
                 ))}

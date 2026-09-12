@@ -24,7 +24,7 @@ export function ExperiencesBannerSection() {
 
       <div className="relative h-[440px] w-full sm:h-[560px] lg:h-[640px]">
         <SafeImage
-          src="https://images.unsplash.com/photo-1458642849426-cfb724f15ef7"
+          src="https://images.unsplash.com/photo-1644917777632-04f68ce502dd"
           alt="Fresh pizza al taglio, one of the tastings featured on our Rome food tours"
           fill
           priority

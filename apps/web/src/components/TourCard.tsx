@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import type { TourDoc } from '@/lib/firestore';
 import { SafeImage } from './SafeImage';
+import { tourHref } from '@/lib/tours';
 
 interface TourCardProps {
   tour: TourDoc;
   priority?: boolean;
+  /** Override the auto-resolved /tours/{seoSlug} link (rarely needed). */
+  href?: string;
 }
 
-export function TourCard({ tour, priority }: TourCardProps) {
+export function TourCard({ tour, priority, href }: TourCardProps) {
   return (
-    <Link href="#" className="group flex h-full flex-col">
+    <Link href={href ?? tourHref(tour.slug)} className="group flex h-full flex-col">
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#f4f4f4]">
         {tour.imageUrl ? (
           <SafeImage

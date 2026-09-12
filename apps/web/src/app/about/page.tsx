@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { getAllTours, getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
-import { AboutHero } from '@/components/AboutHero';
+import { getAllBlogPosts, getAllTours, getPageDoc, SITE_DOMAIN } from '@/lib/firestore';
+import { AboutHero, ABOUT_HERO_IMAGE_ALT, ABOUT_HERO_IMAGE_URL } from '@/components/AboutHero';
 import { OurTravelMantraSection } from '@/components/OurTravelMantraSection';
 import { ExperiencesBannerSection } from '@/components/ExperiencesBannerSection';
 import { WhoWritesThisSection } from '@/components/WhoWritesThisSection';
@@ -18,11 +18,18 @@ export async function generateMetadata(): Promise<Metadata> {
     title: page.metaTitle,
     description: page.metaDesc,
     alternates: { canonical: `https://${SITE_DOMAIN}/about` },
+    openGraph: {
+      title: page.metaTitle,
+      description: page.metaDesc,
+      url: `https://${SITE_DOMAIN}/about`,
+      images: [{ url: ABOUT_HERO_IMAGE_URL, alt: ABOUT_HERO_IMAGE_ALT }],
+    },
+    twitter: { card: 'summary_large_image', images: [ABOUT_HERO_IMAGE_URL] },
   };
 }
 
 export default async function AboutPage() {
-  const tours = await getAllTours();
+  const [tours, allBlogPosts] = await Promise.all([getAllTours(), getAllBlogPosts()]);
 
   return (
     <>
@@ -32,7 +39,7 @@ export default async function AboutPage() {
       <WhoWritesThisSection />
       <HowItStartedSection />
       <HowWeChooseSection />
-      <ExploreLinksSection tours={tours} />
+      <ExploreLinksSection tours={tours} allBlogPosts={allBlogPosts} />
       <AllDestinationsSection />
     </>
   );

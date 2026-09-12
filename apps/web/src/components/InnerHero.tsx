@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SafeImage } from './SafeImage';
 
 interface Breadcrumb {
   label: string;
@@ -10,12 +11,20 @@ interface InnerHeroProps {
   title: string;
   subtitle?: string;
   breadcrumb?: Breadcrumb;
+  /** Optional hero image — renders as a full-width band above the text. Omit for a plain text banner. */
+  imageUrl?: string | null;
+  imageAlt?: string;
 }
 
-export function InnerHero({ eyebrow, title, subtitle, breadcrumb }: InnerHeroProps) {
+export function InnerHero({ eyebrow, title, subtitle, breadcrumb, imageUrl, imageAlt }: InnerHeroProps) {
   return (
-    <section className="bg-[#f9fafa] py-14 sm:py-16">
-      <div className="mx-auto max-w-[1440px] px-6 text-center sm:px-14">
+    <section className="bg-[#f9fafa]">
+      {imageUrl ? (
+        <div className="relative h-[220px] w-full overflow-hidden sm:h-[300px]">
+          <SafeImage src={imageUrl} alt={imageAlt ?? title} fill priority sizes="100vw" className="object-cover" />
+        </div>
+      ) : null}
+      <div className="mx-auto max-w-[1440px] px-6 py-14 text-center sm:px-14 sm:py-16">
         {breadcrumb ? (
           <nav className="mb-3 text-sm text-[#9aa0a5]">
             <Link href={breadcrumb.href} className="hover:text-[#ff0022]">

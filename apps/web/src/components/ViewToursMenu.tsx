@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { CATEGORIES, NEIGHBORHOODS } from '@/lib/tours';
 
 interface NavItem {
   label: string;
@@ -17,11 +18,15 @@ const PAGES: NavItem[] = [
 ];
 
 const TOURS_AND_BLOG: NavItem[] = [
-  { label: 'Trastevere Food Tour', href: '/tours/trastevere-food-tour' },
-  { label: 'Jewish Ghetto Walking Tour', href: '/tours/jewish-ghetto-tour' },
-  { label: 'Rome Street Food Market Tour', href: '/tours/street-food-market-tour' },
+  { label: 'All Tours', href: '/tours' },
+  ...CATEGORIES.map((c) => ({ label: `${c.name} Tours`, href: `/tours/category/${c.slug}` })),
   { label: 'Blog', href: '/blog' },
 ];
+
+const NEIGHBORHOOD_LINKS: NavItem[] = NEIGHBORHOODS.map((n) => ({
+  label: n.name,
+  href: `/neighborhoods/${n.slug}`,
+}));
 
 function ColumnHeading({ children }: { children: React.ReactNode }) {
   return <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#9aa0a5]">{children}</p>;
@@ -65,8 +70,8 @@ export function ViewToursMenu() {
       </button>
 
       {open ? (
-        <div className="absolute left-0 top-full z-50 mt-3 w-[92vw] max-w-[420px] rounded-2xl border border-[#e8ebed] bg-white p-6 shadow-[0_16px_48px_rgba(45,51,57,0.18)]">
-          <div className="grid grid-cols-2 gap-6">
+        <div className="absolute left-0 top-full z-50 mt-3 w-[92vw] max-w-[560px] rounded-2xl border border-[#e8ebed] bg-white p-6 shadow-[0_16px_48px_rgba(45,51,57,0.18)]">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
             <div>
               <ColumnHeading>Pages</ColumnHeading>
               <ul className="mt-3 space-y-2.5">
@@ -84,6 +89,19 @@ export function ViewToursMenu() {
               <ColumnHeading>Tours &amp; Blog</ColumnHeading>
               <ul className="mt-3 space-y-2.5">
                 {TOURS_AND_BLOG.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} onClick={() => setOpen(false)} className={linkClass}>
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="col-span-2 sm:col-span-1">
+              <ColumnHeading>Explore by Neighbourhood</ColumnHeading>
+              <ul className="mt-3 space-y-2.5">
+                {NEIGHBORHOOD_LINKS.map((item) => (
                   <li key={item.href}>
                     <Link href={item.href} onClick={() => setOpen(false)} className={linkClass}>
                       {item.label}

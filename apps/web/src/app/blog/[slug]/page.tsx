@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllBlogPosts, getBlogPostBySlug, SITE_DOMAIN } from '@/lib/firestore';
+import { getAllBlogPosts, getAuthor, getBlogPostBySlug, SITE_DOMAIN } from '@/lib/firestore';
 import { SafeImage } from '@/components/SafeImage';
 
 export const revalidate = 3600;
@@ -20,6 +20,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: post.metaTitle,
     description: post.metaDesc,
     alternates: { canonical: `https://${SITE_DOMAIN}/blog/${post.slug}` },
+    openGraph: post.coverImageUrl
+      ? {
+          type: 'article',
+          title: post.metaTitle,
+          description: post.metaDesc,
+          url: `https://${SITE_DOMAIN}/blog/${post.slug}`,
+          publishedTime: post.publishedAt,
+          images: [{ url: post.coverImageUrl, alt: post.title }],
+        }
+      : undefined,
+    twitter: post.coverImageUrl ? { card: 'summary_large_image', images: [post.coverImageUrl] } : undefined,
   };
 }
 
@@ -32,8 +43,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
+  const author = post.authorId ? await getAuthor(post.authorId) : null;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    datePublished: post.publishedAt,
+    ...(post.coverImageUrl ? { image: post.coverImageUrl } : {}),
+    ...(author ? { author: { '@type': 'Person', name: author.name } } : {}),
+    url: `https://${SITE_DOMAIN}/blog/${post.slug}`,
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <section className="bg-[#f9fafa] py-10 sm:py-14">
         <div className="mx-auto max-w-[720px] px-6 sm:px-14">
           <nav className="text-sm text-[#9aa0a5]">
@@ -46,7 +71,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-[#1a1a1a] sm:text-4xl">
             {post.title}
           </h1>
-          <p className="mt-3 text-sm text-[#9aa0a5]">{formatDate(post.publishedAt)}</p>
+          <p className="mt-3 text-sm text-[#9aa0a5]">
+            {formatDate(post.publishedAt)}
+            {author ? <> &middot; By {author.name}</> : null}
+          </p>
         </div>
       </section>
 
@@ -59,6 +87,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           ) : null}
 
           <div className="rich-content mt-8" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
+
+          {author ? (
+            <div className="mt-10 flex items-start gap-4 rounded-2xl border border-[#e8ebed] p-6">
+              {author.avatarUrl ? (
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-[#f4f4f4]">
+                  <SafeImage src={author.avatarUrl} alt={author.name} fill sizes="48px" className="object-cover" />
+                </div>
+              ) : null}
+              <div>
+                <p className="font-display text-sm font-semibold text-[#1a1a1a]">{author.name}</p>
+                {author.bio ? <p className="mt-1 text-sm leading-relaxed text-[#5c6166]">{author.bio}</p> : null}
+              </div>
+            </div>
+          ) : null}
         </div>
       </section>
     </>

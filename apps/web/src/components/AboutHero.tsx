@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import { SafeImage } from './SafeImage';
 
+export const ABOUT_HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1759843541277-14651600026c';
+export const ABOUT_HERO_IMAGE_ALT =
+  'A fruit and vegetable stall at a Roman street market — the everyday food shopping behind the recommendations on this site';
+
 export function AboutHero() {
   return (
     <section className="relative flex min-h-[360px] items-end overflow-hidden sm:min-h-[440px]">
       <SafeImage
-        src="https://images.unsplash.com/photo-1616362406547-1c556ceb4d80"
-        alt="Testaccio Market in Rome — cheese, cured meat, and produce stalls behind the recommendations on this site"
+        src={ABOUT_HERO_IMAGE_URL}
+        alt={ABOUT_HERO_IMAGE_ALT}
         fill
         priority
         sizes="100vw"

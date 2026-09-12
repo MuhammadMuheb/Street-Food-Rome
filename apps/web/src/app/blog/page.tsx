@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllBlogPosts, SITE_DOMAIN } from '@/lib/firestore';
 import { InnerHero } from '@/components/InnerHero';
 import { SafeImage } from '@/components/SafeImage';
+import { BLOG_CATEGORIES } from '@/lib/blog';
 
 export const revalidate = 3600;
 
@@ -27,6 +28,22 @@ export default async function BlogIndexPage() {
         subtitle="How to order, what to look for, and how the classics actually differ — written from experience, not a template."
         breadcrumb={{ label: 'Home', href: '/' }}
       />
+
+      <section className="pt-10">
+        <div className="mx-auto max-w-[1000px] px-6 sm:px-14">
+          <div className="flex flex-wrap gap-2">
+            {BLOG_CATEGORIES.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/blog/category/${c.slug}`}
+                className="rounded-full border border-[#e8ebed] bg-white px-4 py-2 text-sm font-semibold text-[#5c6166] transition-colors hover:border-[#ff0022] hover:text-[#ff0022]"
+              >
+                {c.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="py-14">
         <div className="mx-auto max-w-[1000px] px-6 sm:px-14">

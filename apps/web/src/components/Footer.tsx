@@ -1,31 +1,27 @@
 import Link from 'next/link';
+import { NEIGHBORHOODS } from '@/lib/tours';
 
 const COMPANY_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Rome Food Tours', href: '#' },
-  { label: 'Top Attractions', href: '#' },
-  { label: 'All Destinations', href: '#' },
+  { label: 'Rome Food Tours', href: '/tours' },
+  { label: 'Top Attractions', href: '/neighborhoods' },
+  { label: 'All Destinations', href: '/tours' },
 ];
 
-const DESTINATION_LINKS = [
-  'Rome',
-  'Florence',
-  'Venice',
-  'Naples',
-  'Amalfi Coast',
-  'Tuscany',
-  'Milan',
-  'Sicily',
-];
+// Street Food Rome is a single-city site — this used to be an 8-city legacy
+// list from a former multi-tenant platform. Replaced with the 10 Rome
+// neighbourhood guides so the slot stays on-topic instead of pointing at
+// content this site doesn't have.
+const DESTINATION_LINKS = NEIGHBORHOODS;
 
 const LEGAL_LINKS = [
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms of Service', href: '/terms' },
-  { label: 'Cookie Policy', href: '#' },
-  { label: 'Affiliate Disclosure', href: '#' },
+  { label: 'Cookie Policy', href: '/cookie-policy' },
+  { label: 'Affiliate Disclosure', href: '/affiliate-disclosure' },
   { label: 'FAQ', href: '/faq' },
 ];
 
@@ -124,10 +120,13 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-bold uppercase tracking-wide text-[#1a1a1a]">Popular Destinations</h3>
             <ul className="mt-4 space-y-3">
-              {DESTINATION_LINKS.map((name) => (
-                <li key={name}>
-                  <Link href="#" className="text-sm text-[#5c6166] transition-colors hover:text-[#ff0022]">
-                    {name}
+              {DESTINATION_LINKS.map((n) => (
+                <li key={n.slug}>
+                  <Link
+                    href={`/neighborhoods/${n.slug}`}
+                    className="text-sm text-[#5c6166] transition-colors hover:text-[#ff0022]"
+                  >
+                    {n.name}
                   </Link>
                 </li>
               ))}

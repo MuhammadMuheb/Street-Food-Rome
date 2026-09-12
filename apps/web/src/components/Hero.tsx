@@ -3,32 +3,38 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import { SafeImage } from './SafeImage';
+import { tourHref } from '@/lib/tours';
 
 interface HeroProps {
   imageUrl: string | null;
 }
 
-const CHIPS = [
-  'Trastevere',
-  'Testaccio',
-  'Suppli',
-  'Pizza al Taglio',
-  'Food Tours',
-  'Testaccio Market',
-  'Aperitivo',
-  'Jewish Ghetto',
-  "Campo de' Fiori",
-  'Monti',
-  'Prati',
-  'San Lorenzo',
-  'Pigneto',
-  'Gelato',
-  'Coffee Culture',
-  'Cacio e Pepe',
-  'Trapizzino',
-  'Wine Tasting',
-  'Cooking Class',
-  'Market Tour',
+/**
+ * Each chip links to the most specific real page for what it names — a
+ * neighbourhood hub, a category hub, or (for a term that names one exact
+ * tour) the tour page itself — rather than a generic search or hub fallback.
+ */
+const CHIPS: { label: string; href: string }[] = [
+  { label: 'Trastevere', href: '/neighborhoods/trastevere' },
+  { label: 'Testaccio', href: '/neighborhoods/testaccio' },
+  { label: 'Suppli', href: '/tours/category/street-food-classics' },
+  { label: 'Pizza al Taglio', href: '/tours/category/pizza' },
+  { label: 'Food Tours', href: '/tours' },
+  { label: 'Testaccio Market', href: tourHref('testaccio-market-food-tour') },
+  { label: 'Aperitivo', href: tourHref('aperitivo-evening-experience') },
+  { label: 'Jewish Ghetto', href: '/neighborhoods/jewish-ghetto' },
+  { label: "Campo de' Fiori", href: '/neighborhoods/campo-de-fiori' },
+  { label: 'Monti', href: '/neighborhoods/monti' },
+  { label: 'Prati', href: '/neighborhoods/prati' },
+  { label: 'San Lorenzo', href: '/neighborhoods/san-lorenzo' },
+  { label: 'Pigneto', href: '/neighborhoods/pigneto' },
+  { label: 'Gelato', href: '/tours/category/gelato' },
+  { label: 'Coffee Culture', href: tourHref('gelato-espresso-crawl') },
+  { label: 'Cacio e Pepe', href: tourHref('cacio-e-pepe-carbonara-tasting-walk') },
+  { label: 'Trapizzino', href: tourHref('trapizzino-fried-classics-walk') },
+  { label: 'Wine Tasting', href: '/tours/category/beer-and-wine' },
+  { label: 'Cooking Class', href: tourHref('pasta-making-class-trastevere') },
+  { label: 'Market Tour', href: tourHref('testaccio-market-food-tour') },
 ];
 
 export function Hero({ imageUrl }: HeroProps) {
@@ -106,11 +112,11 @@ export function Hero({ imageUrl }: HeroProps) {
           >
             {CHIPS.map((chip) => (
               <Link
-                key={chip}
-                href="#"
+                key={chip.label}
+                href={chip.href}
                 className="flex h-[42px] shrink-0 items-center whitespace-nowrap rounded-lg border border-[#e8ebed] bg-white px-3 text-base font-bold text-[#ff0022]"
               >
-                {chip}
+                {chip.label}
               </Link>
             ))}
           </div>
