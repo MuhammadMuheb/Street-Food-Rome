@@ -1,7 +1,7 @@
 import Link from '@/components/NetworkLink';
 import { SafeImage } from '@/components/SafeImage';
-import { UCAuthorBox, UCFooter, UCHeader } from './UCShared';
-import { FEATURED_TOURS } from '@/lib/underground-colosseum';
+import { AtAGlanceBox, TourComparisonTable, UCAuthorBox, UCFooter, UCHeader } from './UCShared';
+import { getFeaturedToursForPage } from '@/lib/underground-colosseum';
 import type { MoneyPageContent } from '@/lib/underground-colosseum-content';
 
 /**
@@ -12,6 +12,11 @@ import type { MoneyPageContent } from '@/lib/underground-colosseum-content';
  * every page gets the same structure and polish without 5 bespoke files.
  */
 export function MoneyPageTemplate({ content }: { content: MoneyPageContent }) {
+  // Each money page leads with the tours most relevant to its own topic
+  // (e.g. the Kids page leads with the family-paced tour) instead of every
+  // page repeating the identical 8 cards in the identical order.
+  const relevantTours = getFeaturedToursForPage(content.href, 4);
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -39,11 +44,29 @@ export function MoneyPageTemplate({ content }: { content: MoneyPageContent }) {
     url: `https://undergroundcolosseum.com${content.href}`,
   };
 
+  // One Product/Offer node per tour shown in this page's comparison table —
+  // the schema type doc 02 §1 requires alongside TouristAttraction/FAQPage/
+  // BreadcrumbList, previously missing from every money page.
+  const productJsonLd = relevantTours.map((tour) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: tour.title,
+    brand: { '@type': 'Organization', name: tour.partner },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'EUR',
+      price: tour.priceFrom,
+      url: `https://undergroundcolosseum.com/go/${tour.slug}`,
+      availability: 'https://schema.org/InStock',
+    },
+  }));
+
   return (
     <div className="bg-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(attractionJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
 
       <UCHeader toursHref="/#tours" planHref="/#plan-your-visit" faqHref="#faq" ctaHref="#tour-options" />
 
@@ -67,6 +90,9 @@ export function MoneyPageTemplate({ content }: { content: MoneyPageContent }) {
                 {para}
               </p>
             ))}
+            <div className="mt-6 max-w-[420px]">
+              <AtAGlanceBox items={content.atAGlance} />
+            </div>
             <div className="mt-7 flex flex-wrap gap-3">
               <a
                 href="#tour-options"
@@ -118,8 +144,15 @@ export function MoneyPageTemplate({ content }: { content: MoneyPageContent }) {
           <h2 className="mt-2 font-sans text-[26px] font-extrabold leading-snug tracking-tight text-[#1a1a1a] sm:text-[32px]">
             Every Tour Option, Compared
           </h2>
+          <p className="mt-3 max-w-[62ch] text-[15.5px] leading-relaxed text-[#5c6166]">
+            The listings most relevant to this page, side by side — including whether arena-floor access is actually part of
+            the ticket.
+          </p>
+          <div className="mt-6">
+            <TourComparisonTable tours={relevantTours} caption={`Tour comparison for ${content.navTitle}`} />
+          </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {FEATURED_TOURS.map((tour) => (
+            {relevantTours.map((tour) => (
               <div key={tour.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#e8ebed] bg-white">
                 <div className="relative aspect-[4/3] bg-[#f4f4f4]">
                   <SafeImage src={tour.image.src} alt={tour.image.alt} fill sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw" className="object-cover" />

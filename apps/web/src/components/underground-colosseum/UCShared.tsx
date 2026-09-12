@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from '@/components/NetworkLink';
+import { SafeImage } from '@/components/SafeImage';
 import {
   AUTHOR,
   EXPLORE_LINKS,
   LEARN_LINKS,
   PLAN_NAV_ITEMS,
   TOURS_NAV_ITEMS,
+  type FeaturedTour,
   type NavItem,
 } from '@/lib/underground-colosseum';
 import { NETWORK_SITES } from '@/lib/tours';
@@ -423,6 +425,119 @@ export function CarouselArrows({ onPrev, onNext, label }: { onPrev: () => void; 
           <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
+    </div>
+  );
+}
+
+/**
+ * A real side-by-side comparison table (per doc 01's T1 Monument template
+ * spec: "tour-comparison-table"), rather than only a card grid. Sits
+ * alongside the existing card patterns on the homepage and money pages —
+ * added, not swapped in for them — since a table and a card grid serve
+ * different scanning habits (row-by-row spec comparison vs. browsing photos).
+ */
+export function TourComparisonTable({ tours, caption }: { tours: FeaturedTour[]; caption?: string }) {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-[#e8ebed] bg-white">
+      <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+        {caption ? <caption className="sr-only">{caption}</caption> : null}
+        <thead>
+          <tr className="border-b border-[#e8ebed] bg-[#f9fafa]">
+            <th scope="col" className="px-4 py-3 font-bold text-[#1a1a1a]">Tour</th>
+            <th scope="col" className="px-4 py-3 font-bold text-[#1a1a1a]">Partner</th>
+            <th scope="col" className="px-4 py-3 font-bold text-[#1a1a1a]">Duration</th>
+            <th scope="col" className="px-4 py-3 font-bold text-[#1a1a1a]">Arena floor</th>
+            <th scope="col" className="px-4 py-3 text-right font-bold text-[#1a1a1a]">From</th>
+            <th scope="col" className="px-4 py-3" aria-label="Link" />
+          </tr>
+        </thead>
+        <tbody>
+          {tours.map((tour) => (
+            <tr key={tour.slug} className="border-b border-[#e8ebed] last:border-b-0 even:bg-[#f9fafa]/50">
+              <td className="px-4 py-3 font-semibold text-[#1a1a1a]">{tour.title}</td>
+              <td className="px-4 py-3 text-[#5c6166]">{tour.partner}</td>
+              <td className="px-4 py-3 text-[#5c6166]">{tour.meta.split('·')[0].trim()}</td>
+              <td className="px-4 py-3">
+                {tour.arenaFloor ? (
+                  <span className="inline-flex items-center gap-1 font-semibold text-[#3f7a3f]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="m5 12.5 4.5 4.5L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Included
+                  </span>
+                ) : (
+                  <span className="text-[#9aa0a5]">Not included</span>
+                )}
+              </td>
+              <td className="px-4 py-3 text-right font-bold text-[#1a1a1a]">&euro;{tour.priceFrom}</td>
+              <td className="px-4 py-3 text-right">
+                <Link href={`/go/${tour.slug}`} className="text-sm font-bold text-[#ff0022] hover:underline">
+                  View &rarr;
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/**
+ * "Colosseum by the Numbers" stat strip — verifiable historical facts about
+ * the monument (see QUICK_FACTS in lib/underground-colosseum.ts), not
+ * business metrics. Adds editorial depth to the homepage without inventing
+ * traffic/customer figures this independent site has no way to claim.
+ */
+export function QuickFactsStrip({ facts }: { facts: { value: string; label: string; detail: string }[] }) {
+  return (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+      {facts.map((fact) => (
+        <div key={fact.label} className="rounded-2xl border border-[#e8ebed] bg-white p-5 text-center">
+          <p className="font-sans text-[26px] font-extrabold leading-none tracking-tight text-[#ff0022]">{fact.value}</p>
+          <p className="mt-2 text-[13px] font-bold leading-snug text-[#1a1a1a]">{fact.label}</p>
+          <p className="mt-1.5 text-[12px] leading-snug text-[#9aa0a5]">{fact.detail}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * "At a glance" summary box for a money page — every value passed in
+ * restates something already stated in that page's own body copy (see
+ * AtAGlanceItem in lib/underground-colosseum-content.ts), surfaced as a
+ * scannable table instead of requiring a full read to find it.
+ */
+export function AtAGlanceBox({ items }: { items: { label: string; value: string }[] }) {
+  return (
+    <div className="rounded-2xl border border-[#e8ebed] bg-[#f9fafa] p-5">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#9aa0a5]">At a glance</p>
+      <dl className="mt-3 divide-y divide-[#e8ebed]">
+        {items.map((item) => (
+          <div key={item.label} className="flex items-start justify-between gap-4 py-2.5 first:pt-0 last:pb-0">
+            <dt className="text-sm text-[#5c6166]">{item.label}</dt>
+            <dd className="text-right text-sm font-bold text-[#1a1a1a]">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+/**
+ * Photo-led gallery grid — for pages like Arena Floor Walkthrough whose
+ * whole premise is first-hand photography (doc 01's T1 "photo-gallery"
+ * block), which previously rendered as a single hero image plus text.
+ */
+export function PhotoGallery({ images }: { images: { src: string; alt: string }[] }) {
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {images.map((image) => (
+        <div key={image.src} className="relative aspect-square overflow-hidden rounded-xl bg-[#f4f4f4]">
+          <SafeImage src={image.src} alt={image.alt} fill sizes="(min-width: 640px) 25vw, 50vw" className="object-cover" />
+        </div>
+      ))}
     </div>
   );
 }

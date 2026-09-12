@@ -1,7 +1,11 @@
 import Link from '@/components/NetworkLink';
 import { SafeImage } from '@/components/SafeImage';
-import { UCAuthorBox, UCFooter, UCHeader } from './UCShared';
+import { PhotoGallery, UCAuthorBox, UCFooter, UCHeader } from './UCShared';
+import { ARENA_FLOOR_GALLERY } from '@/lib/underground-colosseum';
 import type { SupportPageContent } from '@/lib/underground-colosseum-content';
+
+/** The one support page whose whole premise is first-hand photography (doc 01's T1 "photo-gallery" block) gets an actual gallery, not just a single hero image. */
+const GALLERY_HREF = '/arena-floor-walkthrough-photos';
 
 /**
  * Shared template for all 6 support pages (per the site blueprint's §07
@@ -81,6 +85,20 @@ export function SupportPageTemplate({ content }: { content: SupportPageContent }
               ))}
             </div>
           ))}
+
+          {content.href === GALLERY_HREF ? (
+            <div className="mt-10">
+              <h2 className="font-sans text-[22px] font-extrabold leading-snug tracking-tight text-[#1a1a1a] sm:text-[26px]">
+                More From the Walkthrough
+              </h2>
+              <p className="mt-3 text-[15.5px] leading-relaxed text-[#5c6166]">
+                A few more frames from the same visit — all our own, shot on the routes this page describes.
+              </p>
+              <div className="mt-5">
+                <PhotoGallery images={ARENA_FLOOR_GALLERY} />
+              </div>
+            </div>
+          ) : null}
 
           <div className="mt-10 rounded-2xl border border-[#e8ebed] bg-[#f9fafa] p-6">
             <h3 className="font-sans text-[17px] font-bold text-[#1a1a1a]">Ready to book?</h3>

@@ -8,11 +8,21 @@ import {
   FEATURED_TOURS,
   HERO_IMAGE,
   MONEY_PAGES,
+  QUICK_FACTS,
   QUICK_LINKS,
   SUPPORT_PAGES,
   WORTH_IT_PAGE,
 } from '@/lib/underground-colosseum';
-import { CarouselArrows, RibbonBadge, UCAuthorBox, UCFooter, UCHeader, useCardCarousel } from '@/components/underground-colosseum/UCShared';
+import {
+  CarouselArrows,
+  QuickFactsStrip,
+  RibbonBadge,
+  TourComparisonTable,
+  UCAuthorBox,
+  UCFooter,
+  UCHeader,
+  useCardCarousel,
+} from '@/components/underground-colosseum/UCShared';
 
 /**
  * Homepage for the Underground Colosseum hero property (undergroundcolosseum.com,
@@ -181,6 +191,20 @@ function FeaturedToursCarousel() {
 }
 
 export function UndergroundColosseumHome() {
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Underground Colosseum',
+    url: 'https://undergroundcolosseum.com/',
+  };
+
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Underground Colosseum',
+    url: 'https://undergroundcolosseum.com/',
+  };
+
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -204,6 +228,8 @@ export function UndergroundColosseumHome() {
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
 
@@ -280,8 +306,41 @@ export function UndergroundColosseumHome() {
         </div>
       </div>
 
+      {/* ---------- Colosseum by the numbers ---------- */}
+      <section className="border-b border-[#e8ebed] bg-[#f9fafa] py-14 sm:py-16">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">Before the tunnels were tours</p>
+          <h2 className="mt-2 font-sans text-[26px] font-extrabold leading-snug tracking-tight text-[#1a1a1a] sm:text-[32px]">
+            The Colosseum, by the Numbers
+          </h2>
+          <p className="mt-3 max-w-[62ch] text-[15.5px] leading-relaxed text-[#5c6166]">
+            A little history before you book — the same facts that make the underground worth seeing in the first place.
+          </p>
+          <div className="mt-8">
+            <QuickFactsStrip facts={QUICK_FACTS} />
+          </div>
+        </div>
+      </section>
+
       <MoneyPagesCarousel />
       <FeaturedToursCarousel />
+
+      {/* ---------- full tour comparison table ---------- */}
+      <section className="border-b border-[#e8ebed] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff0022]">Every partner, side by side</p>
+          <h2 className="mt-2 font-sans text-[28px] font-extrabold leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-[36px]">
+            Compare All 8 Tours at a Glance
+          </h2>
+          <p className="mt-3 max-w-[62ch] text-[15.5px] leading-relaxed text-[#5c6166]">
+            The same 8 listings as the carousel above, laid out as a straight spec comparison — duration, whether arena-floor
+            access is actually included, and price, so you can scan the whole market in one table instead of card by card.
+          </p>
+          <div className="mt-8">
+            <TourComparisonTable tours={FEATURED_TOURS} caption="Comparison of every featured Colosseum tour by partner, duration, arena-floor access and price" />
+          </div>
+        </div>
+      </section>
 
       {/* ---------- validation teasers ---------- */}
       <section className="border-b border-[#e8ebed] py-16 sm:py-20">

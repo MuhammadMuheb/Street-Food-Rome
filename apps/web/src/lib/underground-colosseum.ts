@@ -71,7 +71,21 @@ export const MONEY_PAGES = [
   },
 ];
 
-export const FEATURED_TOURS = [
+export interface FeaturedTour {
+  partner: string;
+  slug: string;
+  title: string;
+  meta: string;
+  priceFrom: number;
+  badge: string | null;
+  image: { src: string; alt: string };
+  /** Whether this specific listing includes arena-floor access (vs. hypogeum-only or no underground at all). Stated plainly rather than assumed, since it's the single biggest factor in what a tour actually delivers (see the Underground & Arena Floor money page). */
+  arenaFloor: boolean;
+  /** Used only to pick a relevant subset/ordering per money page — not shown in the UI as literal labels. */
+  tags: string[];
+}
+
+export const FEATURED_TOURS: FeaturedTour[] = [
   {
     partner: 'GetYourGuide',
     slug: 'gyg-underground-arena-floor',
@@ -80,6 +94,8 @@ export const FEATURED_TOURS = [
     priceFrom: 89,
     badge: 'Best Seller' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1460722665083-c2599113f7e0', alt: 'Dramatic low-angle view of the Colosseum’s upper arches' },
+    arenaFloor: true,
+    tags: ['underground', 'arena-floor', 'first-timer'],
   },
   {
     partner: 'Viator',
@@ -89,6 +105,8 @@ export const FEATURED_TOURS = [
     priceFrom: 110,
     badge: 'Small Group' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1603199766980-fdd4ac568a11', alt: 'The Colosseum glowing gold at sunset, seen from below' },
+    arenaFloor: false,
+    tags: ['private', 'underground'],
   },
   {
     partner: 'Tiqets',
@@ -98,6 +116,8 @@ export const FEATURED_TOURS = [
     priceFrom: 50,
     badge: 'Best Value' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1511163262182-1b04e5fa4caa', alt: 'The Colosseum’s arches against a bright blue sky' },
+    arenaFloor: true,
+    tags: ['skip-the-line', 'self-paced', 'budget', 'arena-floor'],
   },
   {
     partner: 'GetYourGuide',
@@ -107,6 +127,8 @@ export const FEATURED_TOURS = [
     priceFrom: 95,
     badge: 'Family Friendly' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1724398915427-edc535c546fe', alt: 'Visitors of all ages walking the plaza around the Colosseum' },
+    arenaFloor: false,
+    tags: ['family', 'underground'],
   },
   {
     partner: 'Viator',
@@ -116,6 +138,8 @@ export const FEATURED_TOURS = [
     priceFrom: 75,
     badge: 'Most Complete' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1663143050642-69240b347b2b', alt: 'Full daytime view of the Colosseum exterior' },
+    arenaFloor: false,
+    tags: ['combo', 'first-timer'],
   },
   {
     partner: 'GetYourGuide',
@@ -125,6 +149,8 @@ export const FEATURED_TOURS = [
     priceFrom: 105,
     badge: 'Golden Hour' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1509024644558-2f56ce76c490', alt: 'The Colosseum silhouetted against a fiery sunset sky' },
+    arenaFloor: true,
+    tags: ['underground', 'arena-floor', 'evening'],
   },
   {
     partner: 'Tiqets',
@@ -134,6 +160,8 @@ export const FEATURED_TOURS = [
     priceFrom: 55,
     badge: 'Evening Pick' as string | null,
     image: { src: 'https://images.unsplash.com/photo-1725623903410-296fdc9e2ea8', alt: 'The Colosseum illuminated at night' },
+    arenaFloor: false,
+    tags: ['skip-the-line', 'self-paced', 'evening', 'budget'],
   },
   {
     partner: 'Viator',
@@ -143,7 +171,68 @@ export const FEATURED_TOURS = [
     priceFrom: 99,
     badge: null as string | null,
     image: { src: 'https://images.unsplash.com/photo-1634196243663-71cc3a1c639a', alt: 'Close-up low-angle view of the Colosseum’s arches framed by trees' },
+    arenaFloor: false,
+    tags: ['underground', 'combo'],
   },
+];
+
+/**
+ * Relevance tags to prioritize per money page, most-relevant first. Used by
+ * getFeaturedToursForPage below so each money page leads with the tours that
+ * actually fit its topic instead of repeating the same 8 cards in the same
+ * order on all 5 pages (see the design blueprint's "duplicate tour cards"
+ * finding).
+ */
+const MONEY_PAGE_RELEVANCE: Record<string, string[]> = {
+  '/underground-arena-floor-tour': ['arena-floor', 'underground'],
+  '/skip-the-line-colosseum-tickets': ['skip-the-line', 'self-paced', 'budget'],
+  '/private-vs-group-colosseum-tour': ['private', 'underground'],
+  '/colosseum-with-kids-family-guide': ['family'],
+  '/best-colosseum-tour-by-visitor-type': ['first-timer', 'budget', 'self-paced', 'evening', 'family'],
+};
+
+/**
+ * Returns FEATURED_TOURS reordered so tours matching this money page's topic
+ * lead, with the rest filling out the remaining slots (never fewer than
+ * `max` results as long as FEATURED_TOURS has that many entries). Falls back
+ * to the original order for any href not in MONEY_PAGE_RELEVANCE (e.g. when
+ * called from the homepage, which wants the full unfiltered set).
+ */
+export function getFeaturedToursForPage(href: string, max = 4): FeaturedTour[] {
+  const priority = MONEY_PAGE_RELEVANCE[href];
+  if (!priority) return FEATURED_TOURS.slice(0, max);
+
+  const score = (tour: FeaturedTour) =>
+    priority.reduce((best, tag, index) => (tour.tags.includes(tag) ? Math.min(best, index) : best), priority.length);
+
+  return [...FEATURED_TOURS].sort((a, b) => score(a) - score(b)).slice(0, max);
+}
+
+/**
+ * Real, verifiable facts about the Colosseum itself (not business/traffic
+ * metrics) — used for the homepage's "Colosseum by the Numbers" strip. Kept
+ * separate from FEATURED_TOURS/MONEY_PAGES since these describe the
+ * monument, not anything this site sells or claims about its own audience.
+ */
+export const QUICK_FACTS = [
+  { value: '80 AD', label: 'Year it opened', detail: 'Inaugurated by Emperor Titus with 100 days of games.' },
+  { value: '50,000+', label: 'Spectator capacity', detail: 'Ancient estimates for the amphitheatre at full capacity.' },
+  { value: '80', label: 'Ground-level entrances', detail: 'Numbered arches that let tens of thousands enter and exit quickly.' },
+  { value: '2 levels', label: 'Underground hypogeum', detail: 'Tunnels and lift shafts added beneath the arena under Emperor Domitian, roughly 81–96 AD.' },
+  { value: '2010', label: 'Hypogeum reopened', detail: 'The underground network was closed to the public for decades before limited guided tours resumed.' },
+];
+
+/**
+ * Extra Colosseum photography for the Arena Floor Walkthrough support page's
+ * gallery — reuses images already verified elsewhere on this site (Unsplash
+ * is the platform's one supported external image host; see
+ * next.config.js) rather than introducing new, unchecked URLs.
+ */
+export const ARENA_FLOOR_GALLERY = [
+  { src: 'https://images.unsplash.com/photo-1460722665083-c2599113f7e0', alt: 'Looking straight up at the Colosseum’s tiered arches from arena level' },
+  { src: 'https://images.unsplash.com/photo-1603199766980-fdd4ac568a11', alt: 'The Colosseum glowing gold at sunset, seen from below' },
+  { src: 'https://images.unsplash.com/photo-1634196243663-71cc3a1c639a', alt: 'Close-up low-angle view of the Colosseum’s arches framed by trees' },
+  { src: 'https://images.unsplash.com/photo-1725623903410-296fdc9e2ea8', alt: 'The Colosseum illuminated at night, arches glowing from within' },
 ];
 
 export const SUPPORT_PAGES = [

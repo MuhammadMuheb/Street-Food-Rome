@@ -1,6 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { getAllBlogPosts, listPageDocs, SITE_DOMAIN, type PageDoc } from '@/lib/firestore';
 import { CATEGORIES, NEIGHBORHOODS, NETWORK_SITES, TOURS } from '@/lib/tours';
+import {
+  ARENA_FLOOR_PAGE as UC_ARENA_FLOOR_PAGE,
+  MONEY_PAGES as UC_MONEY_PAGES,
+  SUPPORT_PAGES as UC_SUPPORT_PAGES,
+  WORTH_IT_PAGE as UC_WORTH_IT_PAGE,
+} from '@/lib/underground-colosseum';
 
 // Only these PageDoc slugs have a live route — Firestore may still hold
 // orphaned docs from pages that were removed from the site; keep those out
@@ -114,12 +120,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Placeholder pages for sister network properties — low priority since
-  // content is still being built out.
-  const networkEntries = NETWORK_SITES.map((site) => ({
+  // content is still being built out. Underground Colosseum is excluded
+  // here (see ucEntries below): unlike its 12 not-yet-built siblings, it has
+  // 13 real, indexable pages of its own that deserve their actual priority
+  // tiers instead of the shared placeholder-root entry.
+  const networkEntries = NETWORK_SITES.filter((site) => site.slug !== 'underground-colosseum').map((site) => ({
     url: `https://${SITE_DOMAIN}/${site.slug}`,
     changeFrequency: PRIORITY_TIERS.legal.changeFrequency,
     priority: PRIORITY_TIERS.legal.priority,
   }));
+
+  // Underground Colosseum's own 13 real pages (home, 5 money, 6 support,
+  // about, contact) — previously missing from the sitemap entirely even
+  // though robots.ts allows crawling all of them (see the design blueprint's
+  // "sitemap omission" finding).
+  const ucBase = `https://${SITE_DOMAIN}/underground-colosseum`;
+  const ucEntries = [
+    { url: ucBase, changeFrequency: PRIORITY_TIERS.home.changeFrequency, priority: PRIORITY_TIERS.home.priority },
+    ...UC_MONEY_PAGES.map((page) => ({
+      url: `${ucBase}${page.href}`,
+      changeFrequency: PRIORITY_TIERS.money.changeFrequency,
+      priority: PRIORITY_TIERS.money.priority,
+    })),
+    ...UC_SUPPORT_PAGES.map((page) => ({
+      url: `${ucBase}${page.href}`,
+      changeFrequency: PRIORITY_TIERS.support.changeFrequency,
+      priority: PRIORITY_TIERS.support.priority,
+    })),
+    {
+      url: `${ucBase}${UC_ARENA_FLOOR_PAGE.href}`,
+      changeFrequency: PRIORITY_TIERS.support.changeFrequency,
+      priority: PRIORITY_TIERS.support.priority,
+    },
+    {
+      url: `${ucBase}${UC_WORTH_IT_PAGE.href}`,
+      changeFrequency: PRIORITY_TIERS.support.changeFrequency,
+      priority: PRIORITY_TIERS.support.priority,
+    },
+    { url: `${ucBase}/about`, changeFrequency: PRIORITY_TIERS.about.changeFrequency, priority: PRIORITY_TIERS.about.priority },
+    { url: `${ucBase}/contact`, changeFrequency: PRIORITY_TIERS.about.changeFrequency, priority: PRIORITY_TIERS.about.priority },
+  ];
 
   const blogEntries = posts.map((post) => ({
     url: `https://${SITE_DOMAIN}/blog/${post.slug}`,
@@ -149,6 +189,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     neighborhoodsHubEntry,
     ...neighborhoodEntries,
     ...networkEntries,
+    ...ucEntries,
     blogIndexEntry,
     ...blogCategoryEntries,
     ...blogEntries,

@@ -19,6 +19,11 @@ export interface ContentSection {
   body: string[];
 }
 
+export interface AtAGlanceItem {
+  label: string;
+  value: string;
+}
+
 export interface MoneyPageContent {
   href: string;
   navTitle: string;
@@ -28,6 +33,8 @@ export interface MoneyPageContent {
   metaDescription: string;
   heroImage: { src: string; alt: string };
   intro: string[];
+  /** Scannable summary box rendered next to the intro — every value here is restated from this page's own sections/verdict below, not new information, so the page reads as denser without introducing anything unverified. */
+  atAGlance: AtAGlanceItem[];
   sections: ContentSection[];
   verdict: { heading: string; body: string };
   faqs: FaqEntry[];
@@ -62,6 +69,12 @@ export const MONEY_PAGE_CONTENT: MoneyPageContent[] = [
     intro: [
       'Only a small fraction of Colosseum visitors ever see the hypogeum — the underground network of tunnels, animal cages, and lift shafts beneath the arena floor. Every operator that sells access to it (GetYourGuide, Viator, Tiqets) is booking the same restricted, timed entry through the Colosseum authority; what differs is the guide, the group size, and whether the arena floor itself is included.',
       "This page compares the underground tours actually worth booking, so you're not choosing blind between near-identical listings.",
+    ],
+    atAGlance: [
+      { label: 'Price band', value: '€50–110' },
+      { label: 'Group size', value: '12–25 (private: 6–10)' },
+      { label: 'Arena floor', value: 'Add-on on some tours — confirm before booking' },
+      { label: 'Book by', value: '2–3 weeks ahead in peak season' },
     ],
     sections: [
       {
@@ -111,6 +124,12 @@ export const MONEY_PAGE_CONTENT: MoneyPageContent[] = [
     intro: [
       '"Skip the line" gets used loosely across every ticket platform, and it doesn\'t mean the same thing on every listing. At the Colosseum specifically, it usually means skipping the security/ticket-collection queue at the main entrance — not necessarily a faster route through the monument itself once you\'re inside.',
     ],
+    atAGlance: [
+      { label: 'Ticket types', value: 'Full Experience · Fast Track · Guided' },
+      { label: 'Combined sites', value: 'Colosseum + Forum + Palatine Hill' },
+      { label: 'Book at the gate?', value: 'No — online only, in advance' },
+      { label: 'Queue skipped', value: 'General-admission line (45–90 min peak season)' },
+    ],
     sections: [
       {
         heading: 'The three real ticket types',
@@ -157,6 +176,12 @@ export const MONEY_PAGE_CONTENT: MoneyPageContent[] = [
     heroImage: { src: 'https://images.unsplash.com/photo-1567613747183-fcc1e30a18eb', alt: 'The Colosseum’s curved travertine facade seen up close' },
     intro: [
       'The itinerary is usually identical between a group and a private version of the same Colosseum tour — same sites, same access level. What changes is who else is standing next to you, how much the guide can adapt to your questions, and the price per person.',
+    ],
+    atAGlance: [
+      { label: 'Group tour price', value: '€50–90 / person' },
+      { label: 'Private tour price', value: '€200–300+ (up to 6 people)' },
+      { label: 'Semi-private', value: '6–10 people, mid-range price' },
+      { label: 'Pace', value: 'Fixed schedule (group) vs. flexible (private)' },
     ],
     sections: [
       {
@@ -211,6 +236,12 @@ export const MONEY_PAGE_CONTENT: MoneyPageContent[] = [
     intro: [
       'The Colosseum is genuinely one of the better ancient sites for kids — gladiators and animal-lift mechanisms hold attention in a way a lot of ruins don\'t. The underground specifically has age and mobility restrictions worth knowing before you book, though, and standard group-tour pacing can wear younger kids out fast.',
     ],
+    atAGlance: [
+      { label: 'Underground age minimum', value: '6–8 years (operator-dependent)' },
+      { label: 'Strollers', value: 'Fine on tiers 1–2, not on the underground route' },
+      { label: 'Best time', value: 'Morning slots — cooler and quieter' },
+      { label: 'Seating', value: 'Very limited — plan breaks outside' },
+    ],
     sections: [
       {
         heading: 'Age limits on underground access',
@@ -264,6 +295,12 @@ export const MONEY_PAGE_CONTENT: MoneyPageContent[] = [
     intro: [
       '"Best" depends entirely on what you\'re optimizing for. Instead of one generic recommendation, here\'s the tour type that actually fits five common situations.',
     ],
+    atAGlance: [
+      { label: 'Visitor types covered', value: 'First-timers · History buffs · Short on time · Budget · Evening' },
+      { label: 'Typical length', value: '90 min (self-paced) to a half-day combo' },
+      { label: 'Decide by', value: 'Time, budget, or depth of interest' },
+      { label: 'Not recommended', value: 'Picking whatever ranks highest on a review aggregator' },
+    ],
     sections: [
       {
         heading: 'First-timers',
@@ -308,6 +345,10 @@ export const MONEY_PAGE_CONTENT: MoneyPageContent[] = [
       {
         question: 'Is a self-guided ticket enough, or do I need a guide?',
         answer: 'A self-guided audio ticket works fine if you\'re short on time or on a budget; a live guide adds real value if the underground or arena floor is involved, since a lot of the context isn\'t on posted signage.',
+      },
+      {
+        question: 'How long should I budget for a Colosseum visit?',
+        answer: 'Anywhere from 90 minutes for a self-paced, fast-track visit up to a full half-day if you\'re combining the Colosseum with the Roman Forum and Palatine Hill — match the length to which visitor type above fits you.',
       },
     ],
     relatedSupportHref: '/is-the-underground-worth-it',
