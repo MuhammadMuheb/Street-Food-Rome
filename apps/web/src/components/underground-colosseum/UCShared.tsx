@@ -456,7 +456,7 @@ export function TourComparisonTable({ tours, caption }: { tours: FeaturedTour[];
             <tr key={tour.slug} className="border-b border-[#e8ebed] last:border-b-0 even:bg-[#f9fafa]/50">
               <td className="px-4 py-3 font-semibold text-[#1a1a1a]">{tour.title}</td>
               <td className="px-4 py-3 text-[#5c6166]">{tour.partner}</td>
-              <td className="px-4 py-3 text-[#5c6166]">{tour.meta.split('·')[0].trim()}</td>
+              <td className="px-4 py-3 text-[#5c6166]">{(tour.meta.split('·')[0] ?? '').trim()}</td>
               <td className="px-4 py-3">
                 {tour.arenaFloor ? (
                   <span className="inline-flex items-center gap-1 font-semibold text-[#3f7a3f]">
